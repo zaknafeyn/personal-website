@@ -1,0 +1,52 @@
+.terminalContent {
+  padding: 20px;
+  font-size: 15px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  color: var(--terminal-color);
+  font-family: var(--font-roboto-mono);
+  display: flex;
+  flex-direction: column;
+}
+
+.terminalContainer {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  cursor: text;
+  background-color: var(--foreground);
+}
+
+.terminalCommandOutput {
+  padding: 10px;
+  max-width: 800px;
+}
+
+.terminalCommandOutput dt {
+  color: var(--text-glow-color);
+  text-shadow: 0 0 4px var(--text-glow-color);
+}
+
+.terminalCommandOutput ul {
+  margin-top: 0;
+}
+
+.terminalCommandRecord {
+  display: inline-flex;
+  gap: 5px;
+  scroll-margin: 15px;
+}
+
+.terminalHeading::before {
+  margin-right: 5px;
+  content: "-- ";
+}
+
+.terminalGlow {
+  color: var(--text-glow-color);
+  text-shadow: 0 0 4px var(--text-glow-color);
+}
+
+.terminalInput {
+  color: var(--prompt-color);
+}

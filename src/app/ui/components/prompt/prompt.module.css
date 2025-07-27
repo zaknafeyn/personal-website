@@ -1,0 +1,5 @@
+.promptContainer {
+  align-items: center;
+  display: inline-flex;
+  gap: 5px;
+}

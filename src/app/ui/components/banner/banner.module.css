@@ -1,0 +1,21 @@
+.terminalBanner {
+  color: teal;
+  text-shadow: 0 0 5px teal;
+  line-height: normal;
+  font-weight: bold;
+  font-size: calc(1vw + 7px);
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+}
+
+@media only screen and (max-width: 400px) {
+  .terminalBanner {
+    font-size: 8px;
+  }
+}
+
+@media only screen and (max-width: 300px) {
+  .terminalBanner {
+    font-size: 6px;
+  }
+}

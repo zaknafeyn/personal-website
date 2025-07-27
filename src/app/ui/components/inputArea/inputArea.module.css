@@ -1,0 +1,29 @@
+.terminalInput {
+  font-family: inherit;
+  font-size: inherit;
+  font-size: inherit;
+  color: var(--prompt-color);
+  background: transparent;
+  border: 0px;
+  outline: none; /* no highlight on focus */
+  width: 100%;
+
+  padding-block: 0;
+  padding-inline: 0;
+
+  s &::placeholder {
+    color: var(--placeholder-color);
+    opacity: 0.5;
+  }
+}
+
+.terminalInputArea {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  gap: 5px;
+}
+
+.terminalPromptString {
+  margin-right: 5px;
+}

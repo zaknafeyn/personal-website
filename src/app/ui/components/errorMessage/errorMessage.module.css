@@ -1,0 +1,8 @@
+.terminalError {
+  color: var(--error-color);
+}
+
+.terminalErrorGroup {
+  display: flex;
+  flex-direction: column;
+}

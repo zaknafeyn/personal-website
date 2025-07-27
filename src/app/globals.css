@@ -1,6 +1,34 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  overscroll-behavior: none;
+
+  --color1: #d11800;
+  --color2: #cb3300;
+  --color3: #c54600;
+  --color4: #c05900;
+  --color5: #d1c000;
+  --color6: #a4c410;
+  --color7: #77c821;
+  --color8: #4acc31;
+  --color9: #1dd041;
+  --color10: #00de12;
+
+  --loading-text-color1: #00ff00;
+  --loading-text-color2: #00ffff;
+  --loading-text-color3: #ffff00;
+  --loading-text-color4: #808080;
+  --loading-text-color5: #ffaa00;
+  --loading-text-color6: #00aaff;
+  --loading-text-color7: #888;
+
+  --prompt-color: #f0bf81;
+  --text-glow-color: #eeeeee;
+
+  --error-color: #ff0000;
+  --placeholder-color: #808080;
+
+  --terminal-color: #aaa;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,24 +42,27 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  color-scheme: dark;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: monospace, var(--font-roboto-mono);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-* {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
 a {
-  color: inherit;
+  color: #dea5f5;
+}
+
+a:hover {
+  color: black;
+  background-color: #c4a5f5;
   text-decoration: none;
 }
 

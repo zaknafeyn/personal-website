@@ -1,0 +1,20 @@
+.textHeader {
+  font-size: 25px;
+  line-height: 30px;
+  white-space: pre-wrap;
+  color: var(--terminal-color);
+  font-family: monospace;
+  display: flex;
+}
+
+.textTerminal {
+  font-size: 15px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  color: var(--terminal-color);
+}
+
+.terminalGlow {
+  color: var(--text-glow-color);
+  text-shadow: 0 0 4px var(--text-glow-color);
+}

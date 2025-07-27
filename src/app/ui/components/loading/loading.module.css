@@ -1,0 +1,93 @@
+.loadingWrapper {
+  color: var(--loading-text-color1);
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.loading {
+  width: 100%;
+}
+
+.consoleFallback {
+  width: 100%;
+}
+
+.consoleLine {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.3rem;
+  min-height: 1.4em;
+}
+
+.prompt {
+  color: var(--loading-text-color2);
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.command {
+  color: #ffff00;
+  margin-right: 0.5rem;
+}
+
+.loadingDots {
+  color: var(--loading-text-color1);
+  min-width: 20px;
+}
+
+.spinner {
+  color: var(--loading-text-color2);
+  margin-right: 0.5rem;
+}
+
+.message {
+  color: #ffffff;
+}
+
+.cursor {
+  color: var(--loading-text-color1);
+  animation: blink 1s infinite;
+}
+
+.cursorLine {
+  margin-top: 0.5rem;
+}
+
+.timestamp {
+  color: var(--loading-text-color4);
+  margin-right: 0.5rem;
+  font-size: 0.9em;
+}
+
+.info {
+  color: var(--loading-text-color5);
+  margin-right: 1rem;
+  font-size: 0.9em;
+}
+
+.status {
+  color: var(--loading-text-color6);
+  font-size: 0.9em;
+}
+
+/* Minimal variant */
+.minimal {
+  background-color: transparent;
+}
+
+.minimal .prompt {
+  color: var(--loading-text-color7);
+}
+
+/* Animations */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
