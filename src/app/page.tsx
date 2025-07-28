@@ -14,8 +14,6 @@ const bannerCondensed =`
                                                                                    
 \u00A9 ${getYear()}`;
 
-// const prompt = ">";
-
 const welcomeMessage = `Welcome to my site.
 
 Type 'help' to view a list of available commands.
