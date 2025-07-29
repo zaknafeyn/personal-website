@@ -16,8 +16,8 @@ export const WebsiteCommand: FC<CommandProps> = ({ setCommandFinished }) => {
         Eventually I created a small site in the Global Network that brings some info about me and where I could present myself.
         I built this using <Text.Terminal textEffect="glow">NextJS</Text.Terminal>, <Text.Terminal textEffect="glow">ReactJS</Text.Terminal> and{" "}
         <Text.Terminal textEffect="glow">TypeScript</Text.Terminal>. The website is inspired by{" "}
-        <Link url="https://craigfeldman.com/">
-          Craig Feldman&apos;s website
+        <Link url="https://vradchuk.info/">
+          Valentyn Radchuk&apos;s website
         </Link>{" "}
         and re-written from scratch with enhancements and deeper modularity;
       </Text.Paragraph>

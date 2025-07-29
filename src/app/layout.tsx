@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import type { Viewport } from 'next'
 
-import { Roboto_Mono } from "next/font/google";
+// import { Roboto_Mono } from "next/font/google";
 
 import { Providers } from './providers'
 import "./globals.css";
-
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
-  subsets: ["latin"],
-});
+import { ubuntuMono } from "../utils/getFonts";
  
 export const viewport: Viewport = {
   themeColor: 'black',
@@ -37,7 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${robotoMono.variable}`}>
+      <body
+        className={`${ubuntuMono.variable}`}
+      >
         <Providers>
           {children}
         </Providers>

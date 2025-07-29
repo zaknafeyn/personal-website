@@ -4,7 +4,7 @@
   line-height: 20px;
   white-space: pre-wrap;
   color: var(--terminal-color);
-  font-family: var(--font-roboto-mono);
+  font-family: var(--font-ubuntu);
   display: flex;
   flex-direction: column;
 }

@@ -13,7 +13,7 @@ export const RepoCommand: FC<CommandProps> = ({ setCommandFinished }) => {
   return (
     <>
       <Text.Paragraph>
-        Here is my <Link url="https://github.com/craig-feldman">
+        Here is my <Link url="https://github.com/zaknafeyn">
           GitHub
         </Link>{" "}
       </Text.Paragraph>
@@ -27,7 +27,7 @@ export const RepoCommand: FC<CommandProps> = ({ setCommandFinished }) => {
       </Text.Paragraph>
 
       <Text.Paragraph>
-        Review <Link url="https://github.com/zaknafeyn/git-smart-checkout">source code</Link> of this website
+        Review <Link url="https://github.com/zaknafeyn/personal-website">source code</Link> of this website
       </Text.Paragraph>
     </>
   )

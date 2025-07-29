@@ -1,15 +1,30 @@
 .textHeader {
-  font-size: 25px;
-  line-height: 30px;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
   white-space: pre-wrap;
-  color: var(--terminal-color);
   font-family: monospace;
-  display: flex;
+  display: block;
+  color: var(--header-color);
+  text-shadow: 0 0 5px var(--header-color);
+  margin-bottom: 20px;
+}
+
+.textSubHeader {
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 700;
+  white-space: pre-wrap;
+  font-family: var(--font-ubuntu);
+  display: block;
+  color: var(--header-color);
+  text-shadow: 0 0 5px var(--header-color);
+  margin-bottom: 20px;
 }
 
 .textTerminal {
-  font-size: 15px;
-  line-height: 20px;
+  font-size: 16px;
+  line-height: 18px;
   white-space: pre-wrap;
   color: var(--terminal-color);
 }
@@ -17,4 +32,33 @@
 .terminalGlow {
   color: var(--text-glow-color);
   text-shadow: 0 0 4px var(--text-glow-color);
+}
+
+@media only screen and (max-width: 900px) {
+  .textHeader {
+    font-size: 8px;
+    line-height: 10px;
+  }
+
+  .textSubHeader {
+    font-size: 8px;
+    line-height: 10px;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+  .textHeader {
+    font-size: 5px;
+    line-height: 7px;
+  }
+
+  .textSubHeader {
+    font-size: 6px;
+    line-height: 8px;
+  }
+
+  .textTerminal {
+    font-size: 14px;
+    line-height: 16px;
+  }
 }

@@ -1,3 +1,5 @@
+import { ParsedArg } from "./parseCommand";
+
 export const COMMAND_HELP = "help";
 export const COMMAND_ABOUT = "about";
 export const COMMAND_PROJECTS = "projects";
@@ -44,4 +46,5 @@ export type Command = (typeof allCommands)[number];
 
 export interface CommandProps {
   setCommandFinished: () => void;
+  args?: ParsedArg[];
 }

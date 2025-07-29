@@ -1,5 +1,6 @@
 import React, { FC, useEffect } from "react";
 import styles from './welcomeMessage.module.css'
+import { Text } from "../text";
 
 type WelcomeMessageProps = {
   message: string;
@@ -8,7 +9,7 @@ type WelcomeMessageProps = {
 };
 
 const WelcomeMessage: FC<WelcomeMessageProps> = ({ inputRef, inputAreaRef, message}) => {
-  const welcomeMessageRef = React.useRef<HTMLDivElement>(null);
+  const welcomeMessageRef = React.useRef<HTMLSpanElement>(null);
   useEffect(() => {
     if (inputRef?.current) {
       inputRef.current.disabled = true;
@@ -38,10 +39,10 @@ const WelcomeMessage: FC<WelcomeMessageProps> = ({ inputRef, inputAreaRef, messa
           inputRef.current.focus();
         }
       }
-    }, 30);
+    }, 20);
   }, [inputRef, message, inputAreaRef]);
   return (
-    <div ref={welcomeMessageRef} className={styles.terminalWelcomeMessage}></div>
+    <Text.Terminal ref={welcomeMessageRef} className={styles.terminalWelcomeMessage}>{""}</Text.Terminal>
   );
 };
 

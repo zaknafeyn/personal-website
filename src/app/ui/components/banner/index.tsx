@@ -1,13 +1,17 @@
 import React from "react";
-import styles from "./banner.module.css"
+import { Text } from "../text";
 
 type BannerProps = {
-  banner: string;
+  bannerTitle: string;
+  bannerSubTitle?: string;
 };
 
-const Banner = ({ banner }: BannerProps) => {
+const Banner = ({ bannerTitle, bannerSubTitle }: BannerProps) => {
   return (
-    <pre className={styles.terminalBanner}>{banner}</pre>
+    <>
+      <Text.Header>{bannerTitle}</Text.Header>
+      {bannerSubTitle && <Text.SubHeader>{bannerSubTitle}</Text.SubHeader>}
+    </>
   )
 };
 

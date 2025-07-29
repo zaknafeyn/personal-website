@@ -1,14 +1,13 @@
 'use client'
 
-import React, { FC, JSX, ReactElement, useEffect, useState } from "react";
-import Banner from '../banner';
+import React, { ComponentType, FC, JSX, ReactElement, useCallback, useEffect, useState } from "react";
 import ErrorMessage from "../errorMessage";
 import InputArea from "../inputArea";
 import TerminalOutput from "../terminalOutput";
 import WelcomeMessage from "../welcomeMessage";
 
 import styles from './terminal.module.css';
-import { allCommands, COMMAND_ABOUT, COMMAND_CONTACTS, COMMAND_HELP, COMMAND_REPO, COMMAND_SKILLS, COMMAND_STATS, COMMAND_WEBSITE, echoCommands, EchoCommand } from "../../commands/types";
+import { allCommands, COMMAND_ABOUT, COMMAND_CONTACTS, COMMAND_HELP, COMMAND_REPO, COMMAND_SKILLS, COMMAND_STATS, COMMAND_WEBSITE, echoCommands, EchoCommand, UTILITY_COMMAND_ALL, UTILITY_COMMAND_CV, UTILITY_COMMAND_CLEAR, CommandProps, UtilityCommand } from "../../commands/types";
 import { isEchoCommand, isUtilityCommand, isValidCommand } from "./utils";
 
 import {
@@ -20,20 +19,32 @@ import {
   WebsiteCommand,
   StatsCommand
 } from "app/ui/commands";
-
-const downloadFile = (uri: string, downloadName: string) => {
-  const link = document.createElement("a");
-  link.download = downloadName;
-  link.href = uri;
-  link.click();
-  link.remove();
-};
+import { parseCommand } from "app/ui/commands/parseCommand";
+import { CvCommand } from "app/ui/commands/cvCommand";
 
 type TerminalProps = {
   terminalPrompt: ReactElement | string
-  banner?: string;
+  banner?: ReactElement;
   welcomeMessage?: string;
 };
+
+const commands: { [key in EchoCommand]: ComponentType<CommandProps> } = {
+    [COMMAND_HELP]: HelpCommand,
+    [COMMAND_ABOUT]: AboutCommand,
+    // [COMMAND_PROJECTS]: ProjectsCommand,
+    [COMMAND_CONTACTS]: ContactsCommand,
+    // [COMMAND_AWARDS]: AwardsCommand,
+    [COMMAND_REPO]: RepoCommand,
+    [COMMAND_SKILLS]: SkillsCommand,
+    [COMMAND_WEBSITE]: WebsiteCommand,
+    [COMMAND_STATS]: StatsCommand,
+};
+
+const utilityCommands: { [key in UtilityCommand]: ComponentType<CommandProps> } = {
+  [UTILITY_COMMAND_CV]: CvCommand,
+  [UTILITY_COMMAND_ALL]: CvCommand,
+  [UTILITY_COMMAND_CLEAR]: CvCommand,
+}
 
 const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMessage }) => {
 
@@ -77,23 +88,12 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
    * setting state 'isCommandFinished' indicates that next prompt might be rendered
    * must be set in each command, otherwise prompt won't appear after the command
    */
-  const setCommandFinished = () => {
+  const setCommandFinished = useCallback(() => {
     setIsCommandFinished(true)
-  }
+  }, [])
 
   const commandArgs = { setCommandFinished }
 
-  const commands: { [key in EchoCommand]: JSX.Element } = {
-    [COMMAND_HELP]: <HelpCommand {...commandArgs} />,
-    [COMMAND_ABOUT]: <AboutCommand {...commandArgs} />,
-    // [COMMAND_PROJECTS]: <ProjectsCommand {...commandArgs} />,
-    [COMMAND_CONTACTS]: <ContactsCommand {...commandArgs} />,
-    // [COMMAND_AWARDS]: <AwardsCommand {...commandArgs} />,
-    [COMMAND_REPO]: <RepoCommand {...commandArgs} />,
-    [COMMAND_SKILLS]: <SkillsCommand {...commandArgs} />,
-    [COMMAND_WEBSITE]: <WebsiteCommand {...commandArgs} />,
-    [COMMAND_STATS]: <StatsCommand {...commandArgs} />
-  };
 
   const processCommand = (input: string) => {
 
@@ -119,55 +119,68 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     }
 
     // Now process command, ignoring case
-    const inputCommand = input.toLowerCase();
-    if (!isValidCommand(inputCommand)) {
+    const inputCommand = parseCommand(input.toLowerCase());
+    const { command, args } = inputCommand;
+    console.info(args)
+    if (!isValidCommand(command)) {
       setOutput([
         ...output,
         commandRecord,
         <div key={output.length} className={styles.terminalCommandOutput}>
-          <ErrorMessage command={inputCommand} {...commandArgs}/>
+          <ErrorMessage command={command} {...commandArgs}/>
         </div>,
       ]);
 
       return;
     }
     
-    if (isEchoCommand(inputCommand)) {
+    if (isEchoCommand(command)) {
+      const Component = commands[command];
+      // avoid passing args, as all commands needs to be ran in default mode
+      const props = { setCommandFinished };
       setOutput([
         ...output,
         commandRecord,
-        <div key={output.length} className={styles.terminalCommandOutput}>{commands[inputCommand]}</div>,
+        <div key={output.length} className={styles.terminalCommandOutput}>
+          <Component {...props} />
+        </div>,
       ]);
 
       return;
     }
     
-    if (isUtilityCommand(inputCommand)) {
-      switch (inputCommand) {
-        case "clear": {
+    if (isUtilityCommand(command)) {
+      switch (command) {
+        case UTILITY_COMMAND_CLEAR: {
           setOutput([]);
           setCommandFinished();
           break;
         }
-        case "all": {
+        case UTILITY_COMMAND_ALL: {
           // Output all commands in a custom order.
           const allCommandsOutput = echoCommands
-            .map((command) => (
-            <>
-              <div className={styles.terminalHeading}>{command}</div>
-              <div className={styles.terminalCommandOutput}>
-                {commands[command as EchoCommand]}
-              </div>
-            </>
-          ));
+            .map((command) => {
+              const Component = commands[command];
+              const props = { setCommandFinished, args };
+              
+              return (
+                <>
+                  <div className={styles.terminalHeading}>{command}</div>
+                  <div className={styles.terminalCommandOutput}>
+                    <Component {...props} />
+                  </div>
+                </>
+              )
+            });
 
           setOutput([commandRecord, ...allCommandsOutput]);
           break;
         }
-        case "cv": {
-          setOutput([...output, commandRecord]);
-          downloadFile("CV.pdf", "Craig Feldman - Curriculum Vitae.pdf");
-          setCommandFinished();
+        case UTILITY_COMMAND_CV: {
+          const Component = utilityCommands[UTILITY_COMMAND_CV];
+          const props = { setCommandFinished, args };
+          const command = <Component {...props} />
+          setOutput([...output, commandRecord, command]);
           break;
         }
       }
@@ -216,7 +229,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
   return (
     <div className={styles.terminalContainer} tabIndex={-1} onKeyDown={focusOnInput}>
       <div className={styles.terminalContent}>
-        {banner && <Banner banner={banner} />}
+        {banner}
         {welcomeMessage && (
           <WelcomeMessage message={welcomeMessage} inputRef={inputRef} inputAreaRef={inputAreaRef} />
         )}
