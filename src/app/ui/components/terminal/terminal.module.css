@@ -3,7 +3,7 @@
   font-size: 15px;
   line-height: 20px;
   white-space: pre-wrap;
-  color: var(--terminal-color);
+  color: var(--color-terminal-text-primary);
   font-family: var(--font-ubuntu);
   display: flex;
   flex-direction: column;
@@ -14,7 +14,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   cursor: text;
-  background-color: var(--foreground);
 }
 
 .terminalCommandOutput {
@@ -23,8 +22,8 @@
 }
 
 .terminalCommandOutput dt {
-  color: var(--text-glow-color);
-  text-shadow: 0 0 4px var(--text-glow-color);
+  color: var(--color-terminal-glow);
+  text-shadow: 0 0 4px var(--color-terminal-glow);
 }
 
 .terminalCommandOutput ul {
@@ -43,10 +42,10 @@
 }
 
 .terminalGlow {
-  color: var(--text-glow-color);
-  text-shadow: 0 0 4px var(--text-glow-color);
+  color: var(--color-terminal-glow);
+  text-shadow: 0 0 4px var(--color-terminal-glow);
 }
 
 .terminalInput {
-  color: var(--prompt-color);
+  color: var(--color-input-prompt);
 }

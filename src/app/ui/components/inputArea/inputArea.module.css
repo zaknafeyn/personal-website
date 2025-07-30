@@ -2,7 +2,7 @@
   font-family: inherit;
   font-size: inherit;
   font-size: inherit;
-  color: var(--prompt-color);
+  color: var(--color-input-prompt);
   background: transparent;
   border: 0px;
   outline: none; /* no highlight on focus */
@@ -12,7 +12,7 @@
   padding-inline: 0;
 
   s &::placeholder {
-    color: var(--placeholder-color);
+    color: var(--color-input-placeholder);
     opacity: 0.5;
   }
 }

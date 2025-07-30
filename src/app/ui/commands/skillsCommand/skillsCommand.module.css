@@ -1,49 +1,49 @@
 .level-1 {
-  color: var(--color1);
-  text-shadow: 0 0 5px var(--color1);
+  color: var(--color-skill-gradient-1);
+  text-shadow: 0 0 5px var(--color-skill-gradient-1);
 }
 
 .level-2 {
-  color: var(--color2);
-  text-shadow: 0 0 5px var(--color2);
+  color: var(--color-skill-gradient-2);
+  text-shadow: 0 0 5px var(--color-skill-gradient-2);
 }
 
 .level-3 {
-  color: var(--color3);
-  text-shadow: 0 0 5px var(--color3);
+  color: var(--color-skill-gradient-3);
+  text-shadow: 0 0 5px var(--color-skill-gradient-3);
 }
 
 .level-4 {
-  color: var(--color4);
-  text-shadow: 0 0 5px var(--color4);
+  color: var(--color-skill-gradient-4);
+  text-shadow: 0 0 5px var(--color-skill-gradient-4);
 }
 
 .level-5 {
-  color: var(--color5);
-  text-shadow: 0 0 5px var(--color5);
+  color: var(--color-skill-gradient-5);
+  text-shadow: 0 0 5px var(--color-skill-gradient-5);
 }
 
 .level-6 {
-  color: var(--color6);
-  text-shadow: 0 0 5px var(--color6);
+  color: var(--color-skill-gradient-6);
+  text-shadow: 0 0 5px var(--color-skill-gradient-6);
 }
 
 .level-7 {
-  color: var(--color7);
-  text-shadow: 0 0 5px var(--color7);
+  color: var(--color-skill-gradient-7);
+  text-shadow: 0 0 5px var(--color-skill-gradient-7);
 }
 
 .level-8 {
-  color: var(--color8);
-  text-shadow: 0 0 5px var(--color8);
+  color: var(--color-skill-gradient-8);
+  text-shadow: 0 0 5px var(--color-skill-gradient-8);
 }
 
 .level-9 {
-  color: var(--color9);
-  text-shadow: 0 0 5px var(--color9);
+  color: var(--color-skill-gradient-9);
+  text-shadow: 0 0 5px var(--color-skill-gradient-9);
 }
 
 .level-10 {
-  color: var(--color10);
-  text-shadow: 0 0 5px var(--color10);
+  color: var(--color-skill-gradient-10);
+  text-shadow: 0 0 5px var(--color-skill-gradient-10);
 }

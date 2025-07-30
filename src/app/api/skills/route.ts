@@ -23,6 +23,7 @@ export async function GET() {
       name: "SQL",
       level: 6,
       group: "language",
+      isDetailed: true,
     },
     {
       name: "Go",
@@ -41,9 +42,15 @@ export async function GET() {
       group: "framework",
     },
     {
+      name: "NodeJS",
+      level: 7,
+      group: "framework",
+    },
+    {
       name: "Angular",
       level: 4,
       group: "framework",
+      isDetailed: true,
     },
     // clouds
     {
@@ -69,7 +76,7 @@ export async function GET() {
     },
   ];
 
-  await pause();
+  await pause(3000);
   return Response.json({
     skills,
   });

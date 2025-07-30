@@ -1,7 +1,7 @@
 :global(.terminalCommandOutput) {
   & dt {
-    color: var(--text-glow-color);
-    text-shadow: 0 0 4px var(--text-glow-color);
+    color: var(--color-terminal-glow);
+    text-shadow: 0 0 4px var(--color-terminal-glow);
   }
 
   & dd {

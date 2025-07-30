@@ -1,5 +1,5 @@
 .loadingWrapper {
-  color: var(--loading-text-color1);
+  color: var(--color-loading-text-1);
   border-radius: 4px;
   font-size: 14px;
   line-height: 1.4;
@@ -21,7 +21,7 @@
 }
 
 .prompt {
-  color: var(--loading-text-color2);
+  color: var(--color-loading-text-2);
   margin-right: 0.5rem;
   font-weight: bold;
 }
@@ -32,12 +32,12 @@
 }
 
 .loadingDots {
-  color: var(--loading-text-color1);
+  color: var(--color-loading-text-1);
   min-width: 20px;
 }
 
 .spinner {
-  color: var(--loading-text-color2);
+  color: var(--color-loading-text-2);
   margin-right: 0.5rem;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .cursor {
-  color: var(--loading-text-color1);
+  color: var(--color-loading-text-1);
   animation: blink 1s infinite;
 }
 
@@ -55,19 +55,19 @@
 }
 
 .timestamp {
-  color: var(--loading-text-color4);
+  color: var(--color-loading-text-4);
   margin-right: 0.5rem;
   font-size: 0.9em;
 }
 
 .info {
-  color: var(--loading-text-color5);
+  color: var(--color-loading-text-5);
   margin-right: 1rem;
   font-size: 0.9em;
 }
 
 .status {
-  color: var(--loading-text-color6);
+  color: var(--color-loading-text-6);
   font-size: 0.9em;
 }
 
@@ -77,7 +77,7 @@
 }
 
 .minimal .prompt {
-  color: var(--loading-text-color7);
+  color: var(--color-loading-text-7);
 }
 
 /* Animations */

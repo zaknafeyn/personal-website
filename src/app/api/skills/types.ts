@@ -10,6 +10,7 @@ export interface ISkill {
   name: string;
   level: number;
   group: TSkillGroup;
+  isDetailed?: boolean;
 }
 
 export const SKILL_GROUP_NAME: Record<TSkillGroup, string> = {

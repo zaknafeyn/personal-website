@@ -1,44 +1,55 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
   overscroll-behavior: none;
 
-  --color1: #d11800;
-  --color2: #cb3300;
-  --color3: #c54600;
-  --color4: #c05900;
-  --color5: #d1c000;
-  --color6: #a4c410;
-  --color7: #77c821;
-  --color8: #4acc31;
-  --color9: #1dd041;
-  --color10: #00de12;
+  --color-terminal-background: #2e3436;
+  --color-terminal-foreground: #ffffff;
+  --color-header-text: #008080;
 
-  --header-color: #008080;
+  --color-link: #dea5f5;
+  --color-link-hover-background: #000000;
+  --color-link-hover: #c4a5f5;
 
-  --loading-text-color1: #00ff00;
-  --loading-text-color2: #00ffff;
-  --loading-text-color3: #ffff00;
-  --loading-text-color4: #808080;
-  --loading-text-color5: #ffaa00;
-  --loading-text-color6: #00aaff;
-  --loading-text-color7: #888;
+  --color-terminal-text-primary: #eeeeec;
+  --color-terminal-text-secondary: #aaaaaa;
+  --color-input-placeholder: #808080;
+  --color-input-prompt: #f0bf81;
+  --color-error-text: #ef2929;
+  --color-terminal-glow: #eeeeee;
 
-  --prompt-color: #f0bf81;
-  --text-glow-color: #eeeeee;
+  --color-skill-gradient-1: #d11800;
+  --color-skill-gradient-2: #be3232;
+  --color-skill-gradient-3: #b24d17;
+  --color-skill-gradient-4: #e77d20;
+  --color-skill-gradient-5: #d1c000;
+  --color-skill-gradient-6: #96b60b;
+  --color-skill-gradient-7: #77c821;
+  --color-skill-gradient-8: #4acc31;
+  --color-skill-gradient-9: #18e842;
+  --color-skill-gradient-10: #03ff18;
 
-  --error-color: #ff0000;
-  --placeholder-color: #808080;
+  --color-loading-text-1: #00ff00;
+  --color-loading-text-2: #00ffff;
+  --color-loading-text-3: #ffff00;
+  --color-loading-text-4: #808080;
+  --color-loading-text-5: #ffaa00;
+  --color-loading-text-6: #00aaff;
+  --color-loading-text-7: #888;
 
-  --terminal-color: #aaa;
+  /* --color-username: #8ae234; */
+  /* --color-terminal-bg: #2e3436; */
+
+  /* --color-directory-name: #729fcf; */
+  /* --color-username: #8ae234; */
+  /* --color-prompt-path: #ad7fa8; */
 }
 
+/* TODO: add dark/white theming
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-terminal-background: #ededed;
+    --color-terminal-foreground: #0a0a0a;
   }
-}
+} */
 
 html,
 body {
@@ -48,24 +59,13 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: monospace, var(--font-ubuntu);
+  color: var(--color-terminal-foreground);
+  background: var(--color-terminal-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-}
-
-a {
-  color: #dea5f5;
-}
-
-a:hover {
-  color: black;
-  background-color: #c4a5f5;
-  text-decoration: none;
 }
 
 @media (prefers-color-scheme: dark) {

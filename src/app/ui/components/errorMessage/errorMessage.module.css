@@ -1,5 +1,5 @@
 .terminalError {
-  color: var(--error-color);
+  color: var(--color-error-text);
 }
 
 .terminalErrorGroup {
