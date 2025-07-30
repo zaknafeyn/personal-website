@@ -1,4 +1,3 @@
-import { FC } from "react";
 import styles from "./page.module.css";
 import Banner from "./ui/components/banner";
 import { Prompt } from "./ui/components/prompt";

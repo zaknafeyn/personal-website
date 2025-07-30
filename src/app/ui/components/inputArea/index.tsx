@@ -15,7 +15,7 @@ type InputAreaProps = {
 };
 const InputArea: FC<InputAreaProps> = ({
     terminalPrompt,
-    setOutput,
+    // setOutput,
     processCommand,
     getHistory,
     getAutocomplete,
