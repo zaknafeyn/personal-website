@@ -13,7 +13,7 @@ interface TerminalTextProps extends TextProps {
 }
 
 const Header: FC<TextProps> = ({ children, className }) => {
-  const style = classNames(className, styles.textHeader);
+  const style = classNames(styles.textHeaderCommon, styles.textHeader, className);
 
   return (
     <span className={style}>{children}</span>
@@ -21,7 +21,7 @@ const Header: FC<TextProps> = ({ children, className }) => {
 }
 
 const SubHeader: FC<TextProps> = ({ children, className }) => {
-  const style = classNames(className, styles.textSubHeader);
+  const style = classNames(styles.textHeaderCommon, styles.textSubHeader, className);
 
   return (
     <span className={style}>{children}</span>
