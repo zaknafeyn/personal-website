@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import type { Viewport } from 'next'
 
-// import { Roboto_Mono } from "next/font/google";
-
 import { Providers } from './providers'
 import "./globals.css";
 import { ubuntuMono } from "../utils/getFonts";

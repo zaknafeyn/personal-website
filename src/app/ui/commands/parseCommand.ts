@@ -1,12 +1,9 @@
 // expect command in format of standard nix command like: <command> [(<arg> <value>) | (<arg>)]
-export type ParsedArg =
-  | { [flag: string]: true }
-  | { [flag: string]: string }
-  | { [flag: string]: string[] };
+export type ParsedArg = Record<string, string | boolean | string[]>;
 
 export interface ParsedCommand {
   command: string;
-  args: ParsedArg[];
+  args?: ParsedArg[];
 }
 
 export function parseCommand(input: string): ParsedCommand {
