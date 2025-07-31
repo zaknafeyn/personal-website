@@ -1,50 +1,23 @@
 'use client'
 
-import React, { ComponentType, FC, JSX, ReactElement, useCallback, useEffect, useState } from "react";
+import React, { FC, JSX, ReactElement, useCallback, useEffect, useState } from "react";
 import ErrorMessage from "../errorMessage";
 import InputArea from "../inputArea";
 import TerminalOutput from "../terminalOutput";
 import WelcomeMessage from "../welcomeMessage";
 
+import { allCommands } from "../../commands/types";
 import styles from './terminal.module.css';
-import { allCommands, COMMAND_ABOUT, COMMAND_CONTACTS, COMMAND_HELP, COMMAND_REPO, COMMAND_SKILLS, COMMAND_STATS, COMMAND_WEBSITE, echoCommands, EchoCommand, UTILITY_COMMAND_ALL, UTILITY_COMMAND_CV, UTILITY_COMMAND_CLEAR, CommandProps, UtilityCommand } from "../../commands/types";
 import { isEchoCommand, isUtilityCommand, isValidCommand } from "./utils";
 
-import {
-  HelpCommand,
-  AboutCommand,
-  ContactsCommand,
-  RepoCommand,
-  SkillsCommand,
-  WebsiteCommand,
-  StatsCommand
-} from "app/ui/commands";
+import { COMMANDS_MAPPING, UTILITY_COMMANDS_MAPPING } from "app/ui/commands/consts";
 import { parseCommand } from "app/ui/commands/parseCommand";
-import { CvCommand } from "app/ui/commands/cvCommand";
 
 type TerminalProps = {
   terminalPrompt: ReactElement | string
   banner?: ReactElement;
   welcomeMessage?: string;
 };
-
-const commands: { [key in EchoCommand]: ComponentType<CommandProps> } = {
-    [COMMAND_HELP]: HelpCommand,
-    [COMMAND_ABOUT]: AboutCommand,
-    // [COMMAND_PROJECTS]: ProjectsCommand,
-    [COMMAND_CONTACTS]: ContactsCommand,
-    // [COMMAND_AWARDS]: AwardsCommand,
-    [COMMAND_REPO]: RepoCommand,
-    [COMMAND_SKILLS]: SkillsCommand,
-    [COMMAND_WEBSITE]: WebsiteCommand,
-    [COMMAND_STATS]: StatsCommand,
-};
-
-const utilityCommands: { [key in UtilityCommand]: ComponentType<CommandProps> } = {
-  [UTILITY_COMMAND_CV]: CvCommand,
-  [UTILITY_COMMAND_ALL]: CvCommand,
-  [UTILITY_COMMAND_CLEAR]: CvCommand,
-}
 
 const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMessage }) => {
 
@@ -135,7 +108,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     }
     
     if (isEchoCommand(command)) {
-      const Component = commands[command];
+      const Component = COMMANDS_MAPPING[command];
       // avoid passing args, as all commands needs to be ran in default mode
       const props = { setCommandFinished };
       setOutput([
@@ -148,42 +121,17 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
 
       return;
     }
-    
-    if (isUtilityCommand(command)) {
-      switch (command) {
-        case UTILITY_COMMAND_CLEAR: {
-          setOutput([]);
-          setCommandFinished();
-          break;
-        }
-        case UTILITY_COMMAND_ALL: {
-          // Output all commands in a custom order.
-          const allCommandsOutput = echoCommands
-            .map((command) => {
-              const Component = commands[command];
-              const props = { setCommandFinished, args };
-              
-              return (
-                <>
-                  <div className={styles.terminalHeading}>{command}</div>
-                  <div className={styles.terminalCommandOutput}>
-                    <Component {...props} />
-                  </div>
-                </>
-              )
-            });
 
-          setOutput([commandRecord, ...allCommandsOutput]);
-          break;
-        }
-        case UTILITY_COMMAND_CV: {
-          const Component = utilityCommands[UTILITY_COMMAND_CV];
-          const props = { setCommandFinished, args };
-          const command = <Component {...props} />
-          setOutput([...output, commandRecord, command]);
-          break;
-        }
-      }
+    if (isUtilityCommand(command)) {
+      const Component = UTILITY_COMMANDS_MAPPING[command];
+      const props = {
+        setCommandFinished,
+        args, clearOutput: () => setOutput([])
+      };
+
+      const commandOutput = <Component {...props} />
+
+      setOutput([...output, commandRecord, commandOutput]);
     }
   };
 

@@ -47,4 +47,5 @@ export type Command = (typeof allCommands)[number];
 export interface CommandProps {
   setCommandFinished: () => void;
   args?: ParsedArg[];
+  clearOutput?: () => void;
 }

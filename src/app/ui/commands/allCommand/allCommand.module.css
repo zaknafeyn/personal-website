@@ -1,0 +1,9 @@
+.terminalHeading::before {
+  margin-right: 5px;
+  content: "-- ";
+}
+
+.terminalCommandOutput {
+  padding: 10px;
+  max-width: 800px;
+}

@@ -21,24 +21,10 @@
   max-width: 800px;
 }
 
-.terminalCommandOutput dt {
-  color: var(--color-terminal-glow);
-  text-shadow: 0 0 4px var(--color-terminal-glow);
-}
-
-.terminalCommandOutput ul {
-  margin-top: 0;
-}
-
 .terminalCommandRecord {
   display: inline-flex;
   gap: 5px;
   scroll-margin: 15px;
-}
-
-.terminalHeading::before {
-  margin-right: 5px;
-  content: "-- ";
 }
 
 .terminalGlow {

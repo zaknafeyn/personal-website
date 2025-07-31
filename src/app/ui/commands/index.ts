@@ -7,6 +7,9 @@ import { RepoCommand } from "./repoCommand";
 import { SkillsCommand } from "./skillsCommand";
 import { WebsiteCommand } from "./websiteCommand";
 import { StatsCommand } from "./statsCommand";
+import { CvCommand } from "./cvCommand";
+import { ClearCommand } from "./clearCommand";
+import { AllCommand } from "./allCommand";
 
 export {
   AboutCommand,
@@ -18,4 +21,7 @@ export {
   SkillsCommand,
   WebsiteCommand,
   StatsCommand,
+  CvCommand,
+  ClearCommand,
+  AllCommand,
 };
