@@ -10,6 +10,7 @@ import { StatsCommand } from "./statsCommand";
 import { CvCommand } from "./cvCommand";
 import { ClearCommand } from "./clearCommand";
 import { AllCommand } from "./allCommand";
+import { GameCommand } from "./gameCommand";
 
 export {
   AboutCommand,
@@ -24,4 +25,5 @@ export {
   CvCommand,
   ClearCommand,
   AllCommand,
+  GameCommand,
 };

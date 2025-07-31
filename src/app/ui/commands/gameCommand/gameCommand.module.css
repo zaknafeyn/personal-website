@@ -1,0 +1,69 @@
+.gameCommand {
+  /* variables  */
+  --area-width: 300px;
+  --area-height: 300px;
+  --area-gap: 5px;
+  --color-zero: var(--color-loading-text-6);
+  --color-cross: var(--color-loading-text-3);
+  margin-block: 1em 1em;
+}
+
+.playArea {
+  display: grid;
+  gap: var(--area-gap);
+  width: var(--area-width);
+  height: var(--area-height);
+  margin: 0 auto;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(3, auto);
+}
+
+.message {
+  text-align: center;
+
+  &.X {
+    color: var(--color-cross);
+  }
+
+  &.O {
+    color: var(--color-zero);
+  }
+}
+
+.field {
+  width: calc((var(--area-width) - 3 * var(--area-gap)) / 3);
+  height: calc((var(--area-height) - 3 * var(--area-gap)) / 3);
+  border: solid 1px var(--border-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+
+  &.occupied {
+    cursor: auto;
+  }
+
+  &.disabled {
+    background-color: var(--color-disabled);
+    cursor: auto;
+  }
+
+  &.X {
+    color: var(--color-cross);
+  }
+
+  &.O {
+    color: var(--color-zero);
+  }
+}
+
+.buttonGroup {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-block-start: 20px;
+}

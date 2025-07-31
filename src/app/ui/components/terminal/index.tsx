@@ -99,9 +99,9 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       setOutput([
         ...output,
         commandRecord,
-        <div key={output.length} className={styles.terminalCommandOutput}>
+        <React.Fragment key={output.length}>
           <ErrorMessage command={command} {...commandArgs}/>
-        </div>,
+        </React.Fragment>,
       ]);
 
       return;
@@ -114,9 +114,9 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       setOutput([
         ...output,
         commandRecord,
-        <div key={output.length} className={styles.terminalCommandOutput}>
+        <React.Fragment key={output.length}>
           <Component {...props} />
-        </div>,
+        </React.Fragment>,
       ]);
 
       return;

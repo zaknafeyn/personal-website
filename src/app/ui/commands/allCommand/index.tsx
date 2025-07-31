@@ -16,9 +16,7 @@ export const AllCommand: FC<CommandProps> = ({ setCommandFinished }) => {
           return (
             <Fragment key={command}>
               <div className={styles.terminalHeading}>{command}</div>
-              <div className={styles.terminalCommandOutput}>
                 <Component {...props} />
-              </div>
             </Fragment>
           )
         })

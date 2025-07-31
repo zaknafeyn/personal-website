@@ -9,6 +9,7 @@ export const COMMAND_REPO = "repo";
 export const COMMAND_SKILLS = "skills";
 export const COMMAND_WEBSITE = "website";
 export const COMMAND_STATS = "stats";
+export const COMMAND_GAME = "game";
 
 export const UTILITY_COMMAND_CLEAR = "clear";
 export const UTILITY_COMMAND_ALL = "all";
@@ -24,6 +25,7 @@ export const echoCommands = [
   COMMAND_SKILLS,
   COMMAND_WEBSITE,
   COMMAND_STATS,
+  COMMAND_GAME,
 ] as const;
 
 export type EchoCommand = (typeof echoCommands)[number];

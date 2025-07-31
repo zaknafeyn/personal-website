@@ -5,4 +5,5 @@
 .terminalErrorGroup {
   display: flex;
   flex-direction: column;
+  margin-block: 20px;
 }

@@ -35,6 +35,12 @@
   --color-loading-text-6: #00aaff;
   --color-loading-text-7: #888;
 
+  --color-button-background: var(--color-header-text);
+  --color-button-background-shadow: rgb(0, 128, 128, 0.14);
+
+  --color-disabled: #aaaaaa80;
+  --border-black: #000;
+
   /* --color-username: #8ae234; */
   /* --color-terminal-bg: #2e3436; */
 

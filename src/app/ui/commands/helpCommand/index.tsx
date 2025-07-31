@@ -6,6 +6,7 @@ import {
   COMMAND_ABOUT,
   COMMAND_AWARDS,
   COMMAND_CONTACTS,
+  COMMAND_GAME,
   COMMAND_PROJECTS,
   COMMAND_REPO,
   COMMAND_SKILLS,
@@ -65,6 +66,11 @@ export const HelpCommand: FC<CommandProps> = ({ setCommandFinished }) => {
         label: COMMAND_CONTACTS,
         values: ["Let's keep in touch"],
         isDisabled: !allCommandsArr.includes(COMMAND_CONTACTS),
+      },
+      {
+        label: COMMAND_GAME,
+        values: ["Let's play a game"],
+        isDisabled: !allCommandsArr.includes(COMMAND_GAME),
       },
       {
         label: COMMAND_WEBSITE,
