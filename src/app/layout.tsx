@@ -4,6 +4,10 @@ import type { Viewport } from 'next'
 import { Providers } from './providers'
 import "./globals.css";
 import { ubuntuMono } from "../utils/getFonts";
+
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
  
 export const viewport: Viewport = {
   themeColor: 'black',
@@ -31,9 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${ubuntuMono.variable}`}
-      >
+      <body className={`${ubuntuMono.variable}`}>
         <Providers>
           {children}
         </Providers>

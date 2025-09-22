@@ -2,29 +2,42 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition, faComputer, faMobile } from "@fortawesome/free-solid-svg-icons";
+import { faLinux, faApple, faWindows } from "@fortawesome/free-brands-svg-icons";
 
 import styles from "./prompt.module.css"
 
 import { Text } from "../text";
 
-import { getOs } from "app/ui/utils/getOs"
+import { getOs, TOperatingSystem } from "app/ui/utils/getOs"
 
 interface PromptProps {
   currentPath?: string;
   promptString?: string;
 }
 
-export const Prompt:FC<PromptProps> = ({currentPath = "~", promptString=">"}, ) => {
+const OS_ICONS: Record<TOperatingSystem, IconDefinition> = {
+  "Linux": faLinux,
+  "MacOS": faApple,
+  "Windows": faWindows,
+  "UNIX": faComputer,
+  "Other": faComputer,
+  "Mobile": faMobile
+}
 
-  const [os, setOs] = useState<string | null>(null);
+export const Prompt:FC<PromptProps> = ({currentPath = "~", promptString="$"}, ) => {
+  const [icon, setIcon] = useState(faComputer);
 
   useEffect(() => { 
-    setOs(getOs());
+    const os = getOs();
+    setIcon(OS_ICONS[os])
   }, [])
+
 
   return (
     <div className={styles.promptContainer}>
-      <Text.Terminal>{ os }</Text.Terminal>
+      <FontAwesomeIcon icon={icon} />
       <Text.Terminal>{ currentPath }</Text.Terminal>
       <Text.Terminal>{promptString}</Text.Terminal>
     </div>

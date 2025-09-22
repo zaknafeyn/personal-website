@@ -1,11 +1,20 @@
 "use client";
 
-export type TOperatingSystem = "Windows" | "MacOS" | "UNIX" | "Linux" | "Other";
+export type TOperatingSystem = "Mobile" | "Windows" | "MacOS" | "UNIX" | "Linux" | "Other";
+
+function isMobileAgent(userAgent: string) {
+  const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  return regex.test(userAgent);
+}
 
 export const getOs = (): TOperatingSystem => {
   const userAgent = window.navigator.userAgent;
 
+  const isMobile = isMobileAgent(userAgent)
+
   switch (true) {
+    case isMobile:
+      return "Mobile";
     case userAgent.indexOf("Win") != -1:
       return "Windows";
     case userAgent.indexOf("Mac") != -1:
