@@ -90,8 +90,11 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       </div>
     );
 
-    setHistory([...history, input]);
-    setHistoryIndex(history.length + 1);
+    setHistory((prev) => {
+      const nextHistory = [...prev, input];
+      setHistoryIndex(nextHistory.length);
+      return nextHistory;
+    });
 
     // Now process command, ignoring case
     let inputCommand: ReturnType<typeof parseCommand>;
@@ -99,10 +102,10 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       inputCommand = parseCommand(input.toLowerCase());
     } catch (error) {
       console.error("Failed to parse command", error);
-      setOutput([
-        ...output,
+      setOutput((prev) => [
+        ...prev,
         commandRecord,
-        <React.Fragment key={output.length}>
+        <React.Fragment key={prev.length}>
           <ErrorMessage command={trimmedInput} {...commandArgs}/>
         </React.Fragment>,
       ]);
@@ -113,10 +116,10 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     const { command, args } = inputCommand;
     console.info(args)
     if (!isValidCommand(command)) {
-      setOutput([
-        ...output,
+      setOutput((prev) => [
+        ...prev,
         commandRecord,
-        <React.Fragment key={output.length}>
+        <React.Fragment key={prev.length}>
           <ErrorMessage command={command} {...commandArgs}/>
         </React.Fragment>,
       ]);
@@ -128,10 +131,10 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       const Component = COMMANDS_MAPPING[command];
       // avoid passing args, as all commands needs to be ran in default mode
       const props = { setCommandFinished };
-      setOutput([
-        ...output,
+      setOutput((prev) => [
+        ...prev,
         commandRecord,
-        <React.Fragment key={output.length}>
+        <React.Fragment key={prev.length}>
           <Component {...props} />
         </React.Fragment>,
       ]);
@@ -148,7 +151,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
 
       const commandOutput = <Component {...props} />
 
-      setOutput([...output, commandRecord, commandOutput]);
+      setOutput((prev) => [...prev, commandRecord, commandOutput]);
     }
   };
 
@@ -178,7 +181,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
           <span>{input}</span>
         </div>
       );
-      setOutput([...output, commandRecord, matchingCommands.join("    ")]);
+      setOutput((prev) => [...prev, commandRecord, matchingCommands.join("    ")]);
       return input;
     }
   };
