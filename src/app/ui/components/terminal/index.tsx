@@ -69,6 +69,11 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
 
 
   const processCommand = (input: string) => {
+    const trimmedInput = input.trim();
+
+    if (!trimmedInput) {
+      return;
+    }
 
     // hide prompt until current command finish execution
     setIsCommandFinished(false);
@@ -85,14 +90,26 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       </div>
     );
 
-    // Add command to to history if the command is not empty
-    if (input.trim()) {
-      setHistory([...history, input]);
-      setHistoryIndex(history.length + 1);
-    }
+    setHistory([...history, input]);
+    setHistoryIndex(history.length + 1);
 
     // Now process command, ignoring case
-    const inputCommand = parseCommand(input.toLowerCase());
+    let inputCommand: ReturnType<typeof parseCommand>;
+    try {
+      inputCommand = parseCommand(input.toLowerCase());
+    } catch (error) {
+      console.error("Failed to parse command", error);
+      setOutput([
+        ...output,
+        commandRecord,
+        <React.Fragment key={output.length}>
+          <ErrorMessage command={trimmedInput} {...commandArgs}/>
+        </React.Fragment>,
+      ]);
+
+      return;
+    }
+
     const { command, args } = inputCommand;
     console.info(args)
     if (!isValidCommand(command)) {
