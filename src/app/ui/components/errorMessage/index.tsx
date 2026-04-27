@@ -6,9 +6,10 @@ import styles from './errorMessage.module.css'
 
 interface ErrorMessageProps extends CommandProps {
   command: string;
+  suggestedCommand?: string;
 };
 
-const ErrorMessage: FC<ErrorMessageProps> = ({ command, setCommandFinished }) => {
+const ErrorMessage: FC<ErrorMessageProps> = ({ command, suggestedCommand, setCommandFinished }) => {
   
   useEffect(() => {    
     setCommandFinished();
@@ -19,6 +20,9 @@ const ErrorMessage: FC<ErrorMessageProps> = ({ command, setCommandFinished }) =>
       <Text.Terminal className={styles.terminalError}>
         {`command not found: ${command}.`}
       </Text.Terminal>
+      {suggestedCommand && (
+        <Text.Terminal>{`You might wanted to type '${suggestedCommand}'`}</Text.Terminal>
+      )}
       <Text.Terminal>{`Type 'help' to view a list of available commands`}</Text.Terminal>
     </div>
   );

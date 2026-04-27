@@ -8,7 +8,7 @@ import WelcomeMessage from "../welcomeMessage";
 
 import { allCommands } from "../../commands/types";
 import styles from './terminal.module.css';
-import { isEchoCommand, isUtilityCommand, isValidCommand } from "./utils";
+import { getClosestCommand, isEchoCommand, isUtilityCommand, isValidCommand } from "./utils";
 
 import { COMMANDS_MAPPING, UTILITY_COMMANDS_MAPPING } from "app/ui/commands/consts";
 import { parseCommand } from "app/ui/commands/parseCommand";
@@ -106,7 +106,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
         ...prev,
         commandRecord,
         <React.Fragment key={prev.length}>
-          <ErrorMessage command={trimmedInput} {...commandArgs}/>
+          <ErrorMessage command={trimmedInput} suggestedCommand={getClosestCommand(trimmedInput)} {...commandArgs}/>
         </React.Fragment>,
       ]);
 
@@ -120,7 +120,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
         ...prev,
         commandRecord,
         <React.Fragment key={prev.length}>
-          <ErrorMessage command={command} {...commandArgs}/>
+          <ErrorMessage command={command} suggestedCommand={getClosestCommand(command)} {...commandArgs}/>
         </React.Fragment>,
       ]);
 
