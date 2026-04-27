@@ -1,23 +1,99 @@
 'use client'
 
-import React, { FC, JSX, ReactElement, useCallback, useEffect, useState } from "react";
+import React, { ComponentType, FC, JSX, ReactElement, Suspense, useCallback, useEffect, useState } from "react";
 import ErrorMessage from "../errorMessage";
 import InputArea from "../inputArea";
 import TerminalOutput from "../terminalOutput";
 import WelcomeMessage from "../welcomeMessage";
+import { Loading } from "../loading";
 
-import { allCommands } from "../../commands/types";
+import {
+  allCommands,
+  COMMAND_GAME,
+  COMMAND_SKILLS,
+  COMMAND_STATS,
+  Command,
+  CommandProps,
+  UTILITY_COMMAND_ALL,
+} from "../../commands/types";
 import styles from './terminal.module.css';
 import { getClosestCommand, isEchoCommand, isUtilityCommand, isValidCommand } from "./utils";
 
 import { COMMANDS_MAPPING, UTILITY_COMMANDS_MAPPING } from "app/ui/commands/consts";
 import { parseCommand } from "app/ui/commands/parseCommand";
+import { Text } from "../text";
 
 type TerminalProps = {
   terminalPrompt: ReactElement | string
   banner?: ReactElement;
   welcomeMessage?: string;
 };
+
+type CommandCompletionMode = "rendered" | "resolved" | "manual";
+
+const RESOLVED_COMPLETION_COMMANDS: ReadonlySet<Command> = new Set([
+  COMMAND_SKILLS,
+  COMMAND_STATS,
+  UTILITY_COMMAND_ALL,
+]);
+
+const MANUAL_COMPLETION_COMMANDS: ReadonlySet<Command> = new Set([
+  COMMAND_GAME,
+]);
+
+function getCommandCompletionMode(command: Command): CommandCompletionMode {
+  if (MANUAL_COMPLETION_COMMANDS.has(command)) return "manual";
+  if (RESOLVED_COMPLETION_COMMANDS.has(command)) return "resolved";
+
+  return "rendered";
+}
+
+const CommandCompletionMarker: FC<{ onComplete: () => void }> = ({ onComplete }) => {
+  useEffect(() => {
+    onComplete();
+  }, [onComplete]);
+
+  return null;
+};
+
+const CommandRuntimeError: FC<{ command: string; error?: Error }> = ({ command, error }) => (
+  <div>
+    <Text.Terminal>{`Command '${command}' failed.`}</Text.Terminal>
+    {error?.message && <Text.Terminal>{error.message}</Text.Terminal>}
+    <Text.Terminal>{`The prompt has been restored; try again or type 'help'.`}</Text.Terminal>
+  </div>
+);
+
+type CommandErrorBoundaryProps = {
+  children: React.ReactNode;
+  command: string;
+  onError: () => void;
+};
+
+type CommandErrorBoundaryState = {
+  error?: Error;
+};
+
+class CommandErrorBoundary extends React.Component<CommandErrorBoundaryProps, CommandErrorBoundaryState> {
+  state: CommandErrorBoundaryState = {};
+
+  static getDerivedStateFromError(error: Error): CommandErrorBoundaryState {
+    return { error };
+  }
+
+  componentDidCatch(error: Error) {
+    console.error(`Command '${this.props.command}' failed`, error);
+    this.props.onError();
+  }
+
+  render() {
+    if (this.state.error) {
+      return <CommandRuntimeError command={this.props.command} error={this.state.error} />;
+    }
+
+    return this.props.children;
+  }
+}
 
 const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMessage }) => {
 
@@ -56,16 +132,43 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
 
   useEffect(scrollLastCommandTop, [output]);
 
-  /**
-   * call this fn when command is finished to render next prompt after the command, 
-   * setting state 'isCommandFinished' indicates that next prompt might be rendered
-   * must be set in each command, otherwise prompt won't appear after the command
-   */
-  const setCommandFinished = useCallback(() => {
+  const finishCommand = useCallback(() => {
     setIsCommandFinished(true)
   }, [])
 
-  const commandArgs = { setCommandFinished }
+  const clearOutput = useCallback(() => {
+    setOutput([]);
+  }, []);
+
+  const renderCommandOutput = useCallback((
+    command: Command,
+    Component: ComponentType<CommandProps>,
+    props: CommandProps = {},
+  ) => {
+    const completionMode = getCommandCompletionMode(command);
+    const commandProps = {
+      ...props,
+      ...(completionMode === "manual" ? { onComplete: finishCommand } : {}),
+    };
+
+    const commandOutput = (
+      <>
+        <Component {...commandProps} />
+        {completionMode === "rendered" && <CommandCompletionMarker onComplete={finishCommand} />}
+      </>
+    );
+
+    return (
+      <CommandErrorBoundary command={command} onError={finishCommand}>
+        {completionMode === "resolved" ? (
+          <Suspense fallback={<Loading />}>
+            {commandOutput}
+            <CommandCompletionMarker onComplete={finishCommand} />
+          </Suspense>
+        ) : commandOutput}
+      </CommandErrorBoundary>
+    );
+  }, [finishCommand]);
 
 
   const processCommand = (input: string) => {
@@ -106,7 +209,8 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
         ...prev,
         commandRecord,
         <React.Fragment key={prev.length}>
-          <ErrorMessage command={trimmedInput} suggestedCommand={getClosestCommand(trimmedInput)} {...commandArgs}/>
+          <ErrorMessage command={trimmedInput} suggestedCommand={getClosestCommand(trimmedInput)} />
+          <CommandCompletionMarker onComplete={finishCommand} />
         </React.Fragment>,
       ]);
 
@@ -114,13 +218,13 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     }
 
     const { command, args } = inputCommand;
-    console.info(args)
     if (!isValidCommand(command)) {
       setOutput((prev) => [
         ...prev,
         commandRecord,
         <React.Fragment key={prev.length}>
-          <ErrorMessage command={command} suggestedCommand={getClosestCommand(command)} {...commandArgs}/>
+          <ErrorMessage command={command} suggestedCommand={getClosestCommand(command)} />
+          <CommandCompletionMarker onComplete={finishCommand} />
         </React.Fragment>,
       ]);
 
@@ -129,13 +233,11 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     
     if (isEchoCommand(command)) {
       const Component = COMMANDS_MAPPING[command];
-      // avoid passing args, as all commands needs to be ran in default mode
-      const props = { setCommandFinished };
       setOutput((prev) => [
         ...prev,
         commandRecord,
         <React.Fragment key={prev.length}>
-          <Component {...props} />
+          {renderCommandOutput(command, Component)}
         </React.Fragment>,
       ]);
 
@@ -145,13 +247,17 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     if (isUtilityCommand(command)) {
       const Component = UTILITY_COMMANDS_MAPPING[command];
       const props = {
-        setCommandFinished,
-        args, clearOutput: () => setOutput([])
+        args,
+        clearOutput,
       };
 
-      const commandOutput = <Component {...props} />
+      const commandOutput = renderCommandOutput(command, Component, props);
 
-      setOutput((prev) => [...prev, commandRecord, commandOutput]);
+      setOutput((prev) => [
+        ...prev,
+        commandRecord,
+        <React.Fragment key={prev.length}>{commandOutput}</React.Fragment>,
+      ]);
     }
   };
 

@@ -1,15 +1,10 @@
-import { FC, useEffect } from "react"
+import { FC } from "react"
 
 import { Link } from "app/ui/components/link"
 import { Text } from "app/ui/components/text"
 import { CommandProps } from "../types"
 
-export const RepoCommand: FC<CommandProps> = ({ setCommandFinished }) => {
-
-  useEffect(() => {    
-    setCommandFinished();
-  }, [setCommandFinished]);
-
+export const RepoCommand: FC<CommandProps> = () => {
   return (
     <>
       <Text.Paragraph>

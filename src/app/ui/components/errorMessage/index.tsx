@@ -1,20 +1,14 @@
-import React, { FC, useEffect } from "react";
-import { CommandProps } from "app/ui/commands/types";
+import React, { FC } from "react";
 import { Text } from "../text";
 
 import styles from './errorMessage.module.css'
 
-interface ErrorMessageProps extends CommandProps {
+interface ErrorMessageProps {
   command: string;
   suggestedCommand?: string;
 };
 
-const ErrorMessage: FC<ErrorMessageProps> = ({ command, suggestedCommand, setCommandFinished }) => {
-  
-  useEffect(() => {    
-    setCommandFinished();
-  }, [setCommandFinished]);
-
+const ErrorMessage: FC<ErrorMessageProps> = ({ command, suggestedCommand }) => {
   return (
     <div className={styles.terminalErrorGroup}>
       <Text.Terminal className={styles.terminalError}>

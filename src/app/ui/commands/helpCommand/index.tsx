@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { Text } from "app/ui/components/text";
 import {
@@ -18,11 +18,7 @@ import {
   UTILITY_COMMAND_CV,
 } from "../types";
 
-export const HelpCommand: FC<CommandProps> = ({ setCommandFinished }) => {
-  useEffect(() => {
-    setCommandFinished();
-  }, [setCommandFinished]);
-
+export const HelpCommand: FC<CommandProps> = () => {
   // todo use record of type - all commands to force enumerating all commands here
 
   const items = useMemo(

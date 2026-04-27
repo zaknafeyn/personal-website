@@ -1,8 +1,9 @@
-import { FC, useEffect, useMemo } from "react";
+import { FC, useEffect, useMemo, useRef } from "react";
 import { downloadFile } from "app/ui/utils/downloadFile";
 import { CommandProps } from "../types";
 
-export const CvCommand: FC<CommandProps> = ({ setCommandFinished, args = [] }) => {
+export const CvCommand: FC<CommandProps> = ({ args = [] }) => {
+  const hasRun = useRef(false);
   
   const show = useMemo(() => args.some((arg) => {
     if (!Object.hasOwn(arg, "show")) {
@@ -12,16 +13,17 @@ export const CvCommand: FC<CommandProps> = ({ setCommandFinished, args = [] }) =
     return arg["show"] === true;
   }), [args]);
 
-  useEffect(() => {    
-      setCommandFinished();
-  }, [setCommandFinished]);
+  useEffect(() => {
+    if (hasRun.current) return;
 
-  
-  if (show) {
-    window.open("/CV.pdf", "_blank");
-  } else {
-    downloadFile("CV.pdf", "Valentyn_Radchuk-Software_Engineer.pdf");
-  }
+    hasRun.current = true;
+
+    if (show) {
+      window.open("/CV.pdf", "_blank");
+    } else {
+      downloadFile("CV.pdf", "Valentyn_Radchuk-Software_Engineer.pdf");
+    }
+  }, [show]);
 
   return null;
 };

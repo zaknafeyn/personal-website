@@ -47,7 +47,7 @@ export const allCommands = [...echoCommands, ...utilityCommands] as const;
 export type Command = (typeof allCommands)[number];
 
 export interface CommandProps {
-  setCommandFinished: () => void;
+  onComplete?: () => void;
   args?: ParsedArg[];
   clearOutput?: () => void;
 }

@@ -1,16 +1,11 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 import { getAge } from "app/ui/utils/getAge";
 import { Text } from "../../components/text";
 import { Link } from "app/ui/components/link";
 import { CommandProps } from "../types";
 
-export const AboutCommand: FC<CommandProps> = ({ setCommandFinished }) => {
-
-  useEffect(() => {    
-    setCommandFinished();
-  }, [setCommandFinished]);
-
+export const AboutCommand: FC<CommandProps> = () => {
   return (
     <div>
       <Text.Paragraph>

@@ -1,16 +1,12 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 import { CommandProps } from "../types";
 import { Text } from "app/ui/components/text";
 import { Link } from "app/ui/components/link";
 
-export const ProjectsCommand: FC<CommandProps> = ({ setCommandFinished }) => {
+export const ProjectsCommand: FC<CommandProps> = () => {
 
   // todo update this file and fill the content
-  useEffect(() => {    
-    setCommandFinished();
-  }, [setCommandFinished]);
-  
   return (
     <>
       <Text.Paragraph>

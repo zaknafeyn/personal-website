@@ -1,15 +1,10 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 import { Link } from 'app/ui/components/link';
 import { Text } from '../../components/text';
 import { CommandProps } from '../types';
 
-export const WebsiteCommand: FC<CommandProps> = ({ setCommandFinished }) => {
-  
-  useEffect(() => {    
-    setCommandFinished();
-  }, [setCommandFinished]);
-
+export const WebsiteCommand: FC<CommandProps> = () => {
   return (
     <>
       <Text.Paragraph>

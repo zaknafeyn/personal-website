@@ -93,7 +93,7 @@ const checkWinner = (board: string[][], col: number, row: number) => {
 
 
 export const GameCommand: FC<CommandProps> = ({
-  setCommandFinished,
+  onComplete,
 }) => {
   const [playField, setPlayField] = useState(initialState);
   const [step, setStep] = useState(0);
@@ -153,7 +153,7 @@ export const GameCommand: FC<CommandProps> = ({
 
   const onExit = () => {
     setReadOnly(true);
-    setCommandFinished();
+    onComplete?.();
     setMessage('Game is over');
   };
 

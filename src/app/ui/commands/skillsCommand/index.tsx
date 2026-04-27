@@ -1,14 +1,13 @@
-import { FC, Fragment, Suspense, useEffect, useMemo, useState } from "react"
+import { FC, Fragment, useEffect, useMemo, useState } from "react"
 import { useSuspenseQuery } from '@tanstack/react-query'; // or your preferred data fetching library
 
 import { ISkill, SKILL_GROUP_NAME, TSkillGroup } from "app/api/skills/types";
 
 import styles from './skillsCommand.module.css';
 import { DescriptionList } from "app/ui/components/descriptionList";
-import { Loading } from "app/ui/components/loading";
 import { CommandProps } from "../types";
 
-const SkillsContent: FC<CommandProps> = ({ setCommandFinished }) => {
+export const SkillsCommand: FC<CommandProps> = () => {
   // Using suspense-enabled data fetching
   const { data: skills } = useSuspenseQuery({
     queryKey: ['skills'],
@@ -40,13 +39,6 @@ const SkillsContent: FC<CommandProps> = ({ setCommandFinished }) => {
     return { aggregatedSkills, groups: Array.from(groups) };
   }, [skills]);
 
-  useEffect(() => {
-    if (skills && skills.length > 0) {
-      setCommandFinished();
-    }
-  }, [skills, setCommandFinished]);
-  
-
   const getListItemsForGroup = (group: string) => {
     return aggregatedSkills[group].map(skill => {
       return {
@@ -77,12 +69,6 @@ const SkillsContent: FC<CommandProps> = ({ setCommandFinished }) => {
     </>
   )
 }
-
-export const SkillsCommand: FC<CommandProps> = (props) => (
-  <Suspense fallback={<Loading />}>
-    <SkillsContent {...props} />
-  </Suspense>
-)
 
 export const SkillsCommand1 = () => {
   const [skills, setSkills] = useState<ISkill[]>([]);

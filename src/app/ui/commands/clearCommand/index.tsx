@@ -1,13 +1,12 @@
 import { FC, useEffect } from "react";
 import { CommandProps } from "../types";
 
-export const ClearCommand: FC<CommandProps> = ({ clearOutput, setCommandFinished }) => {
+export const ClearCommand: FC<CommandProps> = ({ clearOutput }) => {
   
   useEffect(() => {
     clearOutput?.();
-    setCommandFinished();
    }, [
-    clearOutput, setCommandFinished
+    clearOutput
   ])
   
 

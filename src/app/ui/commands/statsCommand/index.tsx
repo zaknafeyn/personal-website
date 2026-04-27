@@ -1,9 +1,8 @@
-import { FC, Suspense, useEffect, useMemo } from "react"
+import { FC, useMemo } from "react"
 import { CommandProps } from "../types"
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ISubmissionResults } from "app/api/stats/types";
 import { Text } from "app/ui/components/text";
-import { Loading } from "app/ui/components/loading";
 import { DescriptionList, DescriptionItem } from "app/ui/components/descriptionList";
 
 interface StatsData {
@@ -16,7 +15,7 @@ const KEY_TITLE_MAPPING: Record<string, string> = {
   leetcodeStats: "Leetcode Stats"
 }
 
-export const StatsContent: FC<CommandProps> = ({ setCommandFinished }) => {
+export const StatsCommand: FC<CommandProps> = () => {
 
   // Using suspense-enabled data fetching
   const { data: stats } = useSuspenseQuery({
@@ -31,12 +30,6 @@ export const StatsContent: FC<CommandProps> = ({ setCommandFinished }) => {
       return { leetcodeStats, gfeStats };
     }
   });
-
-  useEffect(() => {
-    if (stats) {
-      setCommandFinished();
-    }
-  }, [stats, setCommandFinished]);
 
   const listItems = useMemo(() => {
     const keys = Object.keys(stats) as (keyof StatsData)[];
@@ -63,9 +56,3 @@ export const StatsContent: FC<CommandProps> = ({ setCommandFinished }) => {
     </>
   )
 }
-
-export const StatsCommand: FC<CommandProps> = (props) => (
-  <Suspense fallback={<Loading />}>
-    <StatsContent {...props} />
-  </Suspense>
-)

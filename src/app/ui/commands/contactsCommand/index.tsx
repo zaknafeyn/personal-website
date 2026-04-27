@@ -1,15 +1,10 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { Link } from "app/ui/components/link";
 import { CommandProps } from "../types";
 
-export const ContactsCommand: FC<CommandProps> = ({ setCommandFinished }) => {
-  
-  useEffect(() => {    
-    setCommandFinished();
-  }, [setCommandFinished]);
-
+export const ContactsCommand: FC<CommandProps> = () => {
   return (
     <>
       <DescriptionList items={[
