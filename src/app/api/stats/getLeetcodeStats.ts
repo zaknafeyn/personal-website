@@ -16,7 +16,29 @@ interface LeetcodeStatsResponse {
   errors?: unknown[];
 }
 
+export type LeetcodeStatsErrorCode =
+  | "INVALID_USERNAME"
+  | "TIMEOUT"
+  | "UPSTREAM_ERROR"
+  | "NOT_FOUND";
+
+export class LeetcodeStatsError extends Error {
+  constructor(
+    message: string,
+    public readonly code: LeetcodeStatsErrorCode
+  ) {
+    super(message);
+    this.name = "LeetcodeStatsError";
+  }
+}
+
+interface GetLeetcodeStatsOptions {
+  timeoutMs?: number;
+}
+
 const LEETCODE_GRAPHQL_URL = "https://leetcode.com/graphql";
+const DEFAULT_TIMEOUT_MS = 5000;
+const USERNAME_PATTERN = /^[A-Za-z0-9_-]{3,30}$/;
 
 const LEETCODE_STATS_QUERY = `
   query getLeetcodeStats($username: String!) {
@@ -33,37 +55,80 @@ const LEETCODE_STATS_QUERY = `
 
 const DIFFICULTIES: TDifficulty[] = ["All", "Easy", "Medium", "Hard"];
 
+const normalizeUsername = (username: string): string => username.trim();
+
+export const validateLeetcodeUsername = (username?: string): string => {
+  if (!username) {
+    throw new LeetcodeStatsError(
+      "LEETCODE_USERNAME is not configured",
+      "INVALID_USERNAME"
+    );
+  }
+
+  const normalizedUsername = normalizeUsername(username);
+
+  if (!USERNAME_PATTERN.test(normalizedUsername)) {
+    throw new LeetcodeStatsError(
+      "LEETCODE_USERNAME must be 3-30 characters and contain only letters, numbers, underscores, or hyphens",
+      "INVALID_USERNAME"
+    );
+  }
+
+  return normalizedUsername;
+};
+
+const isAbortError = (error: unknown): boolean =>
+  typeof error === "object" &&
+  error !== null &&
+  "name" in error &&
+  error.name === "AbortError";
+
 export const getLeetcodeStats = async (
-  username: string
+  username: string | undefined,
+  { timeoutMs = DEFAULT_TIMEOUT_MS }: GetLeetcodeStatsOptions = {}
 ): Promise<ISubmissionResults[]> => {
+  const validatedUsername = validateLeetcodeUsername(username);
+  const abortController = new AbortController();
+  const timeout = setTimeout(() => abortController.abort(), timeoutMs);
+
   try {
     const response = await fetch(LEETCODE_GRAPHQL_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Referer: `https://leetcode.com/u/${username}/`,
+        Referer: `https://leetcode.com/u/${validatedUsername}/`,
       },
+      signal: abortController.signal,
       body: JSON.stringify({
         query: LEETCODE_STATS_QUERY,
-        variables: { username },
+        variables: { username: validatedUsername },
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`Leetcode API responded with ${response.status}`);
+      throw new LeetcodeStatsError(
+        `Leetcode API responded with ${response.status}`,
+        "UPSTREAM_ERROR"
+      );
     }
 
     const data = (await response.json()) as LeetcodeStatsResponse;
 
     if (data.errors?.length) {
-      throw new Error("Leetcode API returned GraphQL errors");
+      throw new LeetcodeStatsError(
+        "Leetcode API returned GraphQL errors",
+        "UPSTREAM_ERROR"
+      );
     }
 
     const submissionCounts =
       data.data?.matchedUser?.submitStats?.acSubmissionNum;
 
     if (!submissionCounts) {
-      throw new Error(`Leetcode user "${username}" was not found`);
+      throw new LeetcodeStatsError(
+        `Leetcode user "${validatedUsername}" was not found`,
+        "NOT_FOUND"
+      );
     }
 
     const countsByDifficulty = submissionCounts.reduce(
@@ -81,7 +146,22 @@ export const getLeetcodeStats = async (
 
     return result;
   } catch (error) {
-    console.error("Error fetching difficulty:", error);
-    return [];
+    if (error instanceof LeetcodeStatsError) {
+      throw error;
+    }
+
+    if (isAbortError(error)) {
+      throw new LeetcodeStatsError(
+        `Leetcode API request timed out after ${timeoutMs}ms`,
+        "TIMEOUT"
+      );
+    }
+
+    throw new LeetcodeStatsError(
+      "Leetcode API request failed",
+      "UPSTREAM_ERROR"
+    );
+  } finally {
+    clearTimeout(timeout);
   }
 };
