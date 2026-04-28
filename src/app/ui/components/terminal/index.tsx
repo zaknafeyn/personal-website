@@ -22,6 +22,8 @@ import { getClosestCommand, isEchoCommand, isUtilityCommand, isValidCommand } fr
 import { COMMANDS_MAPPING, UTILITY_COMMANDS_MAPPING } from "app/ui/commands/consts";
 import { parseCommand } from "app/ui/commands/parseCommand";
 import { Text } from "../text";
+import { canRedirectCommand, getCommandTextOutput } from "app/ui/commands/textOutput";
+import { downloadTextFile } from "app/ui/utils/downloadFile";
 
 type TerminalProps = {
   terminalPrompt: ReactElement | string
@@ -63,6 +65,61 @@ const CommandRuntimeError: FC<{ command: string; error?: Error }> = ({ command, 
     <Text.Terminal>{`The prompt has been restored; try again or type 'help'.`}</Text.Terminal>
   </div>
 );
+
+type OutputRedirect =
+  | {
+      commandInput: string;
+      fileName: string;
+    }
+  | {
+      error: string;
+    };
+
+function getOutputRedirect(input: string): OutputRedirect | undefined {
+  let quote: string | undefined;
+
+  for (let index = 0; index < input.length; index++) {
+    const char = input[index];
+
+    if ((char === "'" || char === '"') && input[index - 1] !== "\\") {
+      quote = quote === char ? undefined : quote ?? char;
+      continue;
+    }
+
+    if (char !== ">" || quote) {
+      continue;
+    }
+
+    const commandInput = input.slice(0, index).trim();
+    const target = input.slice(index + 1).trim();
+
+    if (!commandInput) {
+      return { error: "Missing command before output redirect." };
+    }
+
+    if (!target) {
+      return { error: "Missing file name after output redirect." };
+    }
+
+    const match = target.match(/^"([^"]+)"$|^'([^']+)'$|^(\S+)$/);
+    const fileName = match?.[1] ?? match?.[2] ?? match?.[3];
+
+    if (!fileName) {
+      return { error: "Redirect target must be a single file name." };
+    }
+
+    return {
+      commandInput,
+      fileName,
+    };
+  }
+
+  return undefined;
+}
+
+function getDownloadName(fileName: string): string {
+  return fileName.split(/[\\/]/).filter(Boolean).at(-1) ?? "output.txt";
+}
 
 type CommandErrorBoundaryProps = {
   children: React.ReactNode;
@@ -199,10 +256,27 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       return nextHistory;
     });
 
+    const outputRedirect = getOutputRedirect(input);
+
+    if (outputRedirect && "error" in outputRedirect) {
+      setOutput((prev) => [
+        ...prev,
+        commandRecord,
+        <React.Fragment key={prev.length}>
+          <Text.Terminal>{outputRedirect.error}</Text.Terminal>
+          <CommandCompletionMarker onComplete={finishCommand} />
+        </React.Fragment>,
+      ]);
+
+      return;
+    }
+
+    const commandInput = outputRedirect?.commandInput ?? input;
+
     // Now process command, ignoring case
     let inputCommand: ReturnType<typeof parseCommand>;
     try {
-      inputCommand = parseCommand(input.toLowerCase());
+      inputCommand = parseCommand(commandInput.toLowerCase());
     } catch (error) {
       console.error("Failed to parse command", error);
       setOutput((prev) => [
@@ -227,6 +301,47 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
           <CommandCompletionMarker onComplete={finishCommand} />
         </React.Fragment>,
       ]);
+
+      return;
+    }
+
+    if (outputRedirect) {
+      if (!canRedirectCommand(command)) {
+        setOutput((prev) => [
+          ...prev,
+          commandRecord,
+          <React.Fragment key={prev.length}>
+            <Text.Terminal>
+              {`Command '${command}' does not produce redirectable text output.`}
+            </Text.Terminal>
+            <CommandCompletionMarker onComplete={finishCommand} />
+          </React.Fragment>,
+        ]);
+
+        return;
+      }
+
+      setOutput((prev) => [...prev, commandRecord]);
+
+      void (async () => {
+        try {
+          const textOutput = await getCommandTextOutput(command);
+          downloadTextFile(textOutput, getDownloadName(outputRedirect.fileName));
+          finishCommand();
+        } catch (error) {
+          console.error(`Failed to redirect command '${command}'`, error);
+          setOutput((prev) => [
+            ...prev,
+            <React.Fragment key={prev.length}>
+              <CommandRuntimeError
+                command={command}
+                error={error instanceof Error ? error : undefined}
+              />
+              <CommandCompletionMarker onComplete={finishCommand} />
+            </React.Fragment>,
+          ]);
+        }
+      })();
 
       return;
     }
