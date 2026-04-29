@@ -8,7 +8,13 @@ import { ubuntuMono } from "../utils/getFonts";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
- 
+
+const siteUrl = "https://vradchuk.info";
+const siteTitle = "Valentyn Radchuk - Full Stack Software Engineer";
+const siteDescription =
+  "Personal website of Valentyn Radchuk, a full stack software engineer.";
+const previewImage = "https://github.com/zaknafeyn.png?size=1200";
+
 export const viewport: Viewport = {
   themeColor: 'black',
   width: 'device-width',
@@ -18,13 +24,44 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "Valentyn Radchuk - Full Stack Software Engineer",
-  description: "Personal web site",
+  metadataBase: new URL(siteUrl),
+  title: siteTitle,
+  description: siteDescription,
   applicationName: "Valentyn Radchuk - personal website",
   authors: { url: "https://github.com/zaknafeyn", name: "Valentyn Radchuk" },
   generator: "next.js",
   keywords: ["react", "nextjs", "personal website", "Valentyn", "Radchuk"],
   robots: { index: true, follow: true },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    url: "/",
+    siteName: "Valentyn Radchuk",
+    images: [
+      {
+        url: previewImage,
+        width: 1200,
+        height: 1200,
+        alt: "Valentyn Radchuk",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: siteTitle,
+    description: siteDescription,
+    images: [
+      {
+        url: previewImage,
+        alt: "Valentyn Radchuk",
+      },
+    ],
+  },
   manifest: './manifest.json'
 };
 
