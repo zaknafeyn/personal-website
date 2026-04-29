@@ -113,6 +113,10 @@ export const HelpCommand: FC<CommandProps> = () => {
         get some more info. You can even type a few letters and press [tab] or
         &apos;.&apos; to autocomplete.
       </Text.Paragraph>
+      <Text.Paragraph>
+        Prefer clickable shortcuts? Try{" "}
+        <Text.Terminal>help --links</Text.Terminal>.
+      </Text.Paragraph>
 
       <DescriptionList items={items} />
     </div>

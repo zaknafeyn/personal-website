@@ -9,12 +9,21 @@ import { Loading } from "../loading";
 
 import {
   allCommands,
+  COMMAND_ABOUT,
+  COMMAND_CONTACTS,
   COMMAND_GAME,
+  COMMAND_HELP,
+  COMMAND_NOW,
+  COMMAND_PROJECTS,
+  COMMAND_REPO,
   COMMAND_SKILLS,
+  COMMAND_STACK,
   COMMAND_STATS,
+  COMMAND_WEBSITE,
   Command,
   CommandProps,
   UTILITY_COMMAND_ALL,
+  UTILITY_COMMAND_CV,
 } from "../../commands/types";
 import styles from './terminal.module.css';
 import { getClosestCommand, isEchoCommand, isUtilityCommand, isValidCommand } from "./utils";
@@ -40,6 +49,28 @@ const RESOLVED_COMPLETION_COMMANDS: ReadonlySet<Command> = new Set([
 const MANUAL_COMPLETION_COMMANDS: ReadonlySet<Command> = new Set([
   COMMAND_GAME,
 ]);
+
+const SUGGESTED_COMMANDS: ReadonlyArray<Command> = [
+  COMMAND_ABOUT,
+  COMMAND_NOW,
+  COMMAND_PROJECTS,
+  COMMAND_SKILLS,
+  COMMAND_STACK,
+  COMMAND_STATS,
+  COMMAND_REPO,
+  COMMAND_WEBSITE,
+  COMMAND_CONTACTS,
+  UTILITY_COMMAND_CV,
+  COMMAND_GAME,
+];
+
+function hasArg(args: CommandProps["args"], name: string): boolean {
+  return args?.some((arg) => Boolean(arg[name])) ?? false;
+}
+
+function shouldShowHelpSuggestions(args: CommandProps["args"]): boolean {
+  return hasArg(args, "links") || hasArg(args, "l");
+}
 
 function getCommandCompletionMode(command: Command): CommandCompletionMode {
   if (MANUAL_COMPLETION_COMMANDS.has(command)) return "manual";
@@ -101,8 +132,10 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(3);
   const [isCommandFinished, setIsCommandFinished] = useState<boolean>(true);
+  const [showCommandSuggestions, setShowCommandSuggestions] = useState(false);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const inputAreaRef = React.useRef<HTMLInputElement | null>(null);
+  const firstSuggestionRef = React.useRef<HTMLButtonElement | null>(null);
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -111,7 +144,13 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     if (!input) return;
 
     const keepFocus = () => {
-      if (document.activeElement !== input) {
+      const activeElement = document.activeElement;
+
+      if (
+        activeElement !== input &&
+        activeElement instanceof HTMLElement &&
+        !activeElement.dataset.terminalInteractive
+      ) {
         input.focus();
       }
     };
@@ -180,6 +219,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
 
     // hide prompt until current command finish execution
     setIsCommandFinished(false);
+    setShowCommandSuggestions(false);
 
     // Store a record of this command with a ref to allow us to scroll it into view.
     // Note: We use a ref callback here because setting the ref directly, then clearing output seems to set the ref to null.
@@ -237,6 +277,10 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
         args,
         params: inputCommand.params,
       };
+
+      if (command === COMMAND_HELP && shouldShowHelpSuggestions(args)) {
+        setShowCommandSuggestions(true);
+      }
 
       setOutput((prev) => [
         ...prev,
@@ -299,12 +343,29 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
   };
 
   const focusOnInput = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const target = event.target;
+
+    if (target === inputRef.current) {
+      return;
+    }
+
+    if (
+      target instanceof HTMLElement &&
+      target.dataset.terminalInteractive
+    ) {
+      return;
+    }
+
     if (event.key === "Tab") {
       // Prevent tab from moving focus
       event.preventDefault();
     }
     inputRef.current?.focus();
   };
+
+  const focusFirstSuggestion = useCallback(() => {
+    firstSuggestionRef.current?.focus();
+  }, []);
 
   return (
     <div className={styles.terminalContainer} tabIndex={-1} onKeyDown={focusOnInput}>
@@ -314,6 +375,24 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
           <WelcomeMessage message={welcomeMessage} inputRef={inputRef} inputAreaRef={inputAreaRef} />
         )}
         <TerminalOutput outputs={output} />
+        {isCommandFinished && showCommandSuggestions && (
+          <div className={styles.commandSuggestions} aria-label="Suggested commands">
+            {SUGGESTED_COMMANDS.filter((command) => allCommands.includes(command)).map(
+              (command, index) => (
+                <button
+                  className={styles.commandSuggestion}
+                  data-terminal-interactive="true"
+                  key={command}
+                  onClick={() => processCommand(command)}
+                  ref={index === 0 ? firstSuggestionRef : undefined}
+                  type="button"
+                >
+                  {command}
+                </button>
+              )
+            )}
+          </div>
+        )}
         {isCommandFinished && <InputArea
           setOutput={setOutput}
           processCommand={processCommand}
@@ -321,6 +400,8 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
           getAutocomplete={getAutocomplete}
           inputRef={inputRef}
           inputAreaRef={inputAreaRef}
+          allowEmptyTabNavigation={showCommandSuggestions}
+          onEmptyTab={focusFirstSuggestion}
           terminalPrompt={terminalPrompt}
           placeholder="Type a command ..."
         />}

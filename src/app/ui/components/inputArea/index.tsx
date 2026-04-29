@@ -11,6 +11,8 @@ type InputAreaProps = {
   getAutocomplete: (input: string) => string;
   inputRef: React.RefObject<HTMLInputElement | null>;
   inputAreaRef: React.RefObject<HTMLInputElement | null>;
+  allowEmptyTabNavigation?: boolean;
+  onEmptyTab?: () => void;
   placeholder?: string;
 };
 const InputArea: FC<InputAreaProps> = ({
@@ -21,6 +23,8 @@ const InputArea: FC<InputAreaProps> = ({
     getAutocomplete,
     inputRef,
     inputAreaRef,
+    allowEmptyTabNavigation = false,
+    onEmptyTab,
     placeholder
   }) => {
   const [input, setInput] = useState("");
@@ -54,6 +58,12 @@ const InputArea: FC<InputAreaProps> = ({
         setInput(getHistory("down"));
         break;
       case "Tab":
+        if (allowEmptyTabNavigation && input.trim() === "") {
+          event.preventDefault();
+          onEmptyTab?.();
+          return;
+        }
+
         // Provide autocomplete on tab. For mobile, we have to handle autocomplete in the input's onChange event.
         event.preventDefault();
         setInput(getAutocomplete(input));

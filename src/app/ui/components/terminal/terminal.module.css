@@ -30,3 +30,46 @@
 .terminalInput {
   color: var(--color-input-prompt);
 }
+
+.commandSuggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-block-end: 10px;
+  margin-block-start: 10px;
+}
+
+.commandSuggestion {
+  appearance: none;
+  background: color-mix(
+    in srgb,
+    var(--color-terminal-glow) 12%,
+    transparent
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--color-terminal-glow) 60%, transparent);
+  border-radius: 4px;
+  color: var(--color-terminal-glow);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.95em;
+  line-height: 1;
+  min-height: 32px;
+  padding: 0 10px;
+}
+
+.commandSuggestion:hover,
+.commandSuggestion:focus-visible {
+  background: color-mix(
+    in srgb,
+    var(--color-terminal-glow) 20%,
+    transparent
+  );
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-terminal-glow) 45%, transparent);
+  outline: none;
+}
+
+.commandSuggestion:active {
+  transform: translateY(1px);
+}

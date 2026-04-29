@@ -29,8 +29,12 @@ type ManualEntry = {
 export const COMMAND_MANUALS: Record<string, ManualEntry> = {
   [COMMAND_HELP]: {
     name: "help",
-    synopsis: "help",
+    synopsis: "help [--links | -l]",
     description: "Lists the available terminal commands with a short description for each one.",
+    options: [
+      "--links    Shows clickable command chips before the next prompt.",
+      "-l         Shorthand for --links.",
+    ],
   },
   [COMMAND_ABOUT]: {
     name: "about",
