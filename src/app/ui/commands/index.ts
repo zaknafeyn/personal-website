@@ -13,6 +13,7 @@ import { AllCommand } from "./allCommand";
 import { GameCommand } from "./gameCommand";
 import { ManCommand } from "./manCommand";
 import { StackCommand } from "./stackCommand";
+import { NowCommand } from "./nowCommand";
 
 export {
   AboutCommand,
@@ -30,4 +31,5 @@ export {
   GameCommand,
   ManCommand,
   StackCommand,
+  NowCommand,
 };

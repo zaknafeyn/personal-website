@@ -14,6 +14,7 @@ import {
   ManCommand,
   ProjectsCommand,
   StackCommand,
+  NowCommand,
 } from ".";
 
 import {
@@ -21,6 +22,7 @@ import {
   COMMAND_CONTACTS,
   COMMAND_GAME,
   COMMAND_HELP,
+  COMMAND_NOW,
   COMMAND_PROJECTS,
   COMMAND_REPO,
   COMMAND_SKILLS,
@@ -48,6 +50,7 @@ export const COMMANDS_MAPPING: {
   [COMMAND_SKILLS]: SkillsCommand,
   [COMMAND_WEBSITE]: WebsiteCommand,
   [COMMAND_STACK]: StackCommand,
+  [COMMAND_NOW]: NowCommand,
   [COMMAND_STATS]: StatsCommand,
   [COMMAND_GAME]: GameCommand,
 };

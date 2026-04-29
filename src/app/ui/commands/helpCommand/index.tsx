@@ -7,6 +7,7 @@ import {
   COMMAND_AWARDS,
   COMMAND_CONTACTS,
   COMMAND_GAME,
+  COMMAND_NOW,
   COMMAND_PROJECTS,
   COMMAND_REPO,
   COMMAND_SKILLS,
@@ -79,6 +80,11 @@ export const HelpCommand: FC<CommandProps> = () => {
         label: COMMAND_STACK,
         values: ["Architecture, stack, tradeoffs, deployment, and source links"],
         isDisabled: !allCommandsArr.includes(COMMAND_STACK),
+      },
+      {
+        label: COMMAND_NOW,
+        values: ["Current focus, learning goals, recent work, and availability"],
+        isDisabled: !allCommandsArr.includes(COMMAND_NOW),
       },
       {
         label: UTILITY_COMMAND_ALL,

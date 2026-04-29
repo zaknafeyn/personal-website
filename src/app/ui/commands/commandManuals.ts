@@ -3,6 +3,7 @@ import {
   COMMAND_CONTACTS,
   COMMAND_GAME,
   COMMAND_HELP,
+  COMMAND_NOW,
   COMMAND_PROJECTS,
   COMMAND_REPO,
   COMMAND_SKILLS,
@@ -72,6 +73,15 @@ export const COMMAND_MANUALS: Record<string, ManualEntry> = {
       "Explains this website's App Router architecture, React Query data layer, command registry, API routes, deployment model, source links, and tradeoffs.",
     notes: [
       "This command focuses on the website architecture; the skills command shows a broader skill matrix.",
+    ],
+  },
+  [COMMAND_NOW]: {
+    name: "now",
+    synopsis: "now",
+    description:
+      "Shows current focus areas, learning goals, recent shipped work, and availability.",
+    notes: [
+      "Use this for the freshest snapshot of what Valentyn is exploring and building toward.",
     ],
   },
   [COMMAND_STATS]: {

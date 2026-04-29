@@ -9,6 +9,7 @@ export const COMMAND_REPO = "repo";
 export const COMMAND_SKILLS = "skills";
 export const COMMAND_WEBSITE = "website";
 export const COMMAND_STACK = "stack";
+export const COMMAND_NOW = "now";
 export const COMMAND_STATS = "stats";
 export const COMMAND_GAME = "game";
 
@@ -27,6 +28,7 @@ export const echoCommands = [
   COMMAND_SKILLS,
   COMMAND_WEBSITE,
   COMMAND_STACK,
+  COMMAND_NOW,
   COMMAND_STATS,
   COMMAND_GAME,
 ] as const;
@@ -42,6 +44,7 @@ export const allOutputCommands = [
   COMMAND_SKILLS,
   COMMAND_WEBSITE,
   COMMAND_STACK,
+  COMMAND_NOW,
   COMMAND_STATS,
   COMMAND_GAME,
 ] as const satisfies readonly EchoCommand[];
