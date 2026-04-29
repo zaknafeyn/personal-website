@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from './welcomeMessage.module.css'
 import { Text } from "../text";
 
@@ -9,7 +9,8 @@ type WelcomeMessageProps = {
 };
 
 const WelcomeMessage: FC<WelcomeMessageProps> = ({ inputRef, inputAreaRef, message}) => {
-  const welcomeMessageRef = React.useRef<HTMLSpanElement>(null);
+  const [visibleMessage, setVisibleMessage] = useState("");
+
   useEffect(() => {
     if (inputRef?.current) {
       inputRef.current.disabled = true;
@@ -20,29 +21,42 @@ const WelcomeMessage: FC<WelcomeMessageProps> = ({ inputRef, inputAreaRef, messa
     }
 
     let index = 0;
-    const typeText = setInterval(() => {
-      if (!welcomeMessageRef.current) {
-        return;
-      }
-      welcomeMessageRef.current.insertAdjacentText(
-        "beforeend",
-        message[index++]
-      );
-      if (index === message.length) {
-        clearInterval(typeText);
-        if (inputAreaRef?.current) {
-          inputAreaRef.current.style.visibility = 'visible';
-        }
+    setVisibleMessage("");
 
-        if (inputRef?.current) {
-          inputRef.current.disabled = false;  
-          inputRef.current.focus();
-        }
+    const finishTyping = () => {
+      if (inputAreaRef?.current) {
+        inputAreaRef.current.style.visibility = 'visible';
+      }
+
+      if (inputRef?.current) {
+        inputRef.current.disabled = false;
+        inputRef.current.focus();
+      }
+    };
+
+    if (!message.length) {
+      finishTyping();
+      return;
+    }
+
+    const typeText = setInterval(() => {
+      index += 1;
+      setVisibleMessage(message.slice(0, index));
+
+      if (index >= message.length) {
+        clearInterval(typeText);
+        finishTyping();
       }
     }, 20);
+
+    return () => {
+      clearInterval(typeText);
+      finishTyping();
+    };
   }, [inputRef, message, inputAreaRef]);
+
   return (
-    <Text.Terminal ref={welcomeMessageRef} className={styles.terminalWelcomeMessage}>{""}</Text.Terminal>
+    <Text.Terminal className={styles.terminalWelcomeMessage}>{visibleMessage}</Text.Terminal>
   );
 };
 

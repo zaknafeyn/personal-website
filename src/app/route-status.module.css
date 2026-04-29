@@ -1,0 +1,123 @@
+.page {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.terminal {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 20px;
+  color: var(--color-terminal-text-primary);
+  font-family: var(--font-ubuntu);
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.banner {
+  display: block;
+  margin-block-end: 20px;
+  color: var(--color-header-text);
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  text-shadow: 0 0 5px var(--color-header-text);
+  white-space: pre-wrap;
+}
+
+.commandRecord {
+  display: inline-flex;
+  gap: 5px;
+  margin-block-end: 14px;
+}
+
+.prompt {
+  color: var(--color-terminal-text-primary);
+}
+
+.input {
+  color: var(--color-input-prompt);
+}
+
+.output {
+  display: grid;
+  gap: 8px;
+  max-width: 720px;
+}
+
+.headline {
+  color: var(--color-error-text);
+}
+
+.muted {
+  color: var(--color-terminal-text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-block-start: 14px;
+}
+
+.action {
+  appearance: none;
+  background: color-mix(
+    in srgb,
+    var(--color-terminal-glow) 12%,
+    transparent
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--color-terminal-glow) 60%, transparent);
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: var(--color-terminal-glow);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  justify-content: center;
+  line-height: 1;
+  min-height: 32px;
+  padding: 8px 10px;
+  text-decoration: none;
+}
+
+.action:hover,
+.action:focus-visible {
+  background: color-mix(
+    in srgb,
+    var(--color-terminal-glow) 20%,
+    transparent
+  );
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-terminal-glow) 45%, transparent);
+  outline: none;
+}
+
+.action:active {
+  transform: translateY(1px);
+}
+
+@media only screen and (max-width: 900px) {
+  .banner {
+    font-size: 8px;
+    line-height: 10px;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+  .terminal {
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  .banner {
+    font-size: 5px;
+    line-height: 7px;
+  }
+
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

@@ -62,7 +62,10 @@ export const metadata: Metadata = {
       },
     ],
   },
-  manifest: './manifest.json'
+  icons: {
+    icon: "/favicon.ico",
+  },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
