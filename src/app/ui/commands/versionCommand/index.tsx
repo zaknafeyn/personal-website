@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 import { Text } from "app/ui/components/text";
-import { CommandProps } from "../types";
+import type { CommandProps } from "../types";
 
 const version = process.env.NEXT_PUBLIC_APP_VERSION ?? "unknown+unknown+unknown";
 

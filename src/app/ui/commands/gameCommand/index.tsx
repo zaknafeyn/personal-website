@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import { CommandProps } from "../types";
+import type { CommandProps } from "../types";
 
 import { Button } from "app/ui/components/button";
 import classNames from "classnames/bind";

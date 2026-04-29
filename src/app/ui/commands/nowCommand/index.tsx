@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { Text } from "app/ui/components/text";
-import { CommandProps } from "../types";
+import type { CommandProps } from "../types";
 
 export const NowCommand: FC<CommandProps> = () => {
   return (

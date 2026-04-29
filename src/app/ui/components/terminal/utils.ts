@@ -1,22 +1,12 @@
 import {
   allCommands,
-  Command,
-  echoCommands,
-  UtilityCommand,
-  utilityCommands,
-  EchoCommand,
-} from "../../commands/types";
-
-export function isEchoCommand(arg: string): arg is EchoCommand {
-  return (echoCommands as ReadonlyArray<string>).includes(arg);
-}
-
-export function isUtilityCommand(arg: string): arg is UtilityCommand {
-  return (utilityCommands as ReadonlyArray<string>).includes(arg);
-}
+  allCommandTokens,
+  resolveCommandName,
+} from "../../commands/registry";
+import type { Command } from "../../commands/registry";
 
 export function isValidCommand(arg: string): arg is Command {
-  return isEchoCommand(arg) || isUtilityCommand(arg);
+  return resolveCommandName(arg) !== undefined;
 }
 
 function getEditDistance(source: string, target: string): number {
@@ -55,11 +45,12 @@ function isCloseCommandMatch(input: string, command: Command, distance: number):
 }
 
 export function getClosestCommand(input: string): Command | undefined {
-  const closestMatch = allCommands.reduce<{ command: Command; distance: number }>((closest, currentCommand) => {
+  const closestMatch = allCommandTokens.reduce<{ command: Command; distance: number }>((closest, currentCommand) => {
     const currentDistance = getEditDistance(input, currentCommand);
+    const resolvedCommand = resolveCommandName(currentCommand) ?? allCommands[0];
 
     return currentDistance < closest.distance
-      ? { command: currentCommand, distance: currentDistance }
+      ? { command: resolvedCommand, distance: currentDistance }
       : closest;
   }, {
     command: allCommands[0],

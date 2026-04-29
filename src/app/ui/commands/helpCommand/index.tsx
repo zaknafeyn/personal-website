@@ -1,113 +1,17 @@
 import { FC, useMemo } from "react";
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { Text } from "app/ui/components/text";
-import {
-  allCommandsArr,
-  COMMAND_ABOUT,
-  COMMAND_AWARDS,
-  COMMAND_CONTACTS,
-  COMMAND_GAME,
-  COMMAND_NOW,
-  COMMAND_PROJECTS,
-  COMMAND_REPO,
-  COMMAND_SKILLS,
-  COMMAND_STACK,
-  COMMAND_STATS,
-  COMMAND_VERSION,
-  COMMAND_WEBSITE,
-  CommandProps,
-  UTILITY_COMMAND_ALL,
-  UTILITY_COMMAND_CLEAR,
-  UTILITY_COMMAND_CV,
-  UTILITY_COMMAND_MAN,
-} from "../types";
+import { commandHelpEntries } from "../registry";
+import type { CommandProps } from "../types";
 
 export const HelpCommand: FC<CommandProps> = () => {
-  // todo use record of type - all commands to force enumerating all commands here
-
   const items = useMemo(
-    () => [
-      {
-        label: COMMAND_ABOUT,
-        values: ["Good way to know something about me"],
-        isDisabled: !allCommandsArr.includes(COMMAND_ABOUT),
-      },
-      {
-        label: COMMAND_PROJECTS,
-        values: ["Engineering case studies, tradeoffs, results, and links"],
-        isDisabled: !allCommandsArr.includes(COMMAND_PROJECTS),
-      },
-      {
-        label: COMMAND_SKILLS,
-        values: ["I'm pretty good at some things"],
-        isDisabled: !allCommandsArr.includes(COMMAND_SKILLS),
-      },
-      {
-        label: COMMAND_STATS,
-        values: ["See my stats on coding platforms"],
-        isDisabled: !allCommandsArr.includes(COMMAND_STATS),
-      },
-      {
-        label: COMMAND_AWARDS,
-        values: ["A bit of boasting"],
-        isDisabled: !allCommandsArr.includes(COMMAND_AWARDS),
-      },
-      {
-        label: COMMAND_REPO,
-        values: ["Take a look at some of my work"],
-        isDisabled: !allCommandsArr.includes(COMMAND_REPO),
-      },
-      {
-        label: UTILITY_COMMAND_CV,
-        values: ["Check out my CV [pdf - 132KB]"],
-        isDisabled: !allCommandsArr.includes(UTILITY_COMMAND_CV),
-      },
-      {
-        label: COMMAND_CONTACTS,
-        values: ["Let's keep in touch"],
-        isDisabled: !allCommandsArr.includes(COMMAND_CONTACTS),
-      },
-      {
-        label: COMMAND_GAME,
-        values: ["Let's play a game"],
-        isDisabled: !allCommandsArr.includes(COMMAND_GAME),
-      },
-      {
-        label: COMMAND_WEBSITE,
-        values: ["How I built this"],
-        isDisabled: !allCommandsArr.includes(COMMAND_WEBSITE),
-      },
-      {
-        label: COMMAND_STACK,
-        values: ["Architecture, stack, tradeoffs, deployment, and source links"],
-        isDisabled: !allCommandsArr.includes(COMMAND_STACK),
-      },
-      {
-        label: COMMAND_NOW,
-        values: ["Current focus, learning goals, recent work, and availability"],
-        isDisabled: !allCommandsArr.includes(COMMAND_NOW),
-      },
-      {
-        label: COMMAND_VERSION,
-        values: ["Shows the current package, commit, and deployment version"],
-        isDisabled: !allCommandsArr.includes(COMMAND_VERSION),
-      },
-      {
-        label: UTILITY_COMMAND_ALL,
-        values: ["Tell me everything"],
-        isDisabled: !allCommandsArr.includes(UTILITY_COMMAND_ALL),
-      },
-      {
-        label: UTILITY_COMMAND_CLEAR,
-        values: ["Clears the terminal of all output"],
-        isDisabled: !allCommandsArr.includes(UTILITY_COMMAND_CLEAR),
-      },
-      {
-        label: UTILITY_COMMAND_MAN,
-        values: ["Displays a brief manual page for a command"],
-        isDisabled: !allCommandsArr.includes(UTILITY_COMMAND_MAN),
-      },
-    ],
+    () =>
+      commandHelpEntries.map((command) => ({
+        label: command.name,
+        values: [command.description],
+        isDisabled: !command.enabled,
+      })),
     []
   );
 

@@ -1,23 +1,7 @@
 import { ISkill, SKILL_GROUP_NAME, TSkillGroup } from "app/api/skills/types";
 import { ISubmissionResults } from "app/api/stats/types";
 import { getAge } from "app/ui/utils/getAge";
-import {
-  allCommandsArr,
-  COMMAND_ABOUT,
-  COMMAND_AWARDS,
-  COMMAND_CONTACTS,
-  COMMAND_GAME,
-  COMMAND_HELP,
-  COMMAND_PROJECTS,
-  COMMAND_REPO,
-  COMMAND_SKILLS,
-  COMMAND_STATS,
-  COMMAND_WEBSITE,
-  Command,
-  UTILITY_COMMAND_ALL,
-  UTILITY_COMMAND_CLEAR,
-  UTILITY_COMMAND_CV,
-} from "./types";
+import { commandHelpEntries } from "./registry";
 
 export type RichTextPart =
   | string
@@ -78,68 +62,11 @@ export const getHelpContent = (): CommandContent => ({
       "Wow, I thought the only people who would visit this site would be bots and spammers, guess I was wrong. Just type any of the commands below to get some more info. You can even type a few letters and press [tab] or '.' to autocomplete."
     ),
   ],
-  descriptionItems: [
-    {
-      label: COMMAND_ABOUT,
-      values: [text("Good way to know something about me")],
-      isDisabled: !allCommandsArr.includes(COMMAND_ABOUT),
-    },
-    {
-      label: COMMAND_PROJECTS,
-      values: [text("Yeah, I've made some cool stuff before")],
-      isDisabled: !allCommandsArr.includes(COMMAND_PROJECTS),
-    },
-    {
-      label: COMMAND_SKILLS,
-      values: [text("I'm pretty good at some things")],
-      isDisabled: !allCommandsArr.includes(COMMAND_SKILLS),
-    },
-    {
-      label: COMMAND_STATS,
-      values: [text("See my stats on coding platforms")],
-      isDisabled: !allCommandsArr.includes(COMMAND_STATS),
-    },
-    {
-      label: COMMAND_AWARDS,
-      values: [text("A bit of boasting")],
-      isDisabled: !allCommandsArr.includes(COMMAND_AWARDS),
-    },
-    {
-      label: COMMAND_REPO,
-      values: [text("Take a look at some of my work")],
-      isDisabled: !allCommandsArr.includes(COMMAND_REPO),
-    },
-    {
-      label: UTILITY_COMMAND_CV,
-      values: [text("Check out my CV [pdf - 132KB]")],
-      isDisabled: !allCommandsArr.includes(UTILITY_COMMAND_CV),
-    },
-    {
-      label: COMMAND_CONTACTS,
-      values: [text("Let's keep in touch")],
-      isDisabled: !allCommandsArr.includes(COMMAND_CONTACTS),
-    },
-    {
-      label: COMMAND_GAME,
-      values: [text("Let's play a game")],
-      isDisabled: !allCommandsArr.includes(COMMAND_GAME),
-    },
-    {
-      label: COMMAND_WEBSITE,
-      values: [text("How I built this")],
-      isDisabled: !allCommandsArr.includes(COMMAND_WEBSITE),
-    },
-    {
-      label: UTILITY_COMMAND_ALL,
-      values: [text("Tell me everything")],
-      isDisabled: !allCommandsArr.includes(UTILITY_COMMAND_ALL),
-    },
-    {
-      label: UTILITY_COMMAND_CLEAR,
-      values: [text("Clears the terminal of all output")],
-      isDisabled: !allCommandsArr.includes(UTILITY_COMMAND_CLEAR),
-    },
-  ],
+  descriptionItems: commandHelpEntries.map((command) => ({
+    label: command.name,
+    values: [text(command.description)],
+    isDisabled: !command.enabled,
+  })),
 });
 
 export const getAboutContent = (): CommandContent => ({
@@ -350,13 +277,3 @@ export const commandContentToPlainText = (content: CommandContent) => {
 
   return parts.join("\n\n");
 };
-
-export const redirectedAllCommands = [
-  COMMAND_HELP,
-  COMMAND_ABOUT,
-  COMMAND_CONTACTS,
-  COMMAND_REPO,
-  COMMAND_SKILLS,
-  COMMAND_WEBSITE,
-  COMMAND_STATS,
-] as const satisfies ReadonlyArray<Command>;

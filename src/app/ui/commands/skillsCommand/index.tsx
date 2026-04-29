@@ -5,7 +5,7 @@ import { ISkill, SKILL_GROUP_NAME, TSkillGroup } from "app/api/skills/types";
 
 import styles from './skillsCommand.module.css';
 import { DescriptionList } from "app/ui/components/descriptionList";
-import { CommandProps } from "../types";
+import type { CommandProps } from "../types";
 
 export const SkillsCommand: FC<CommandProps> = () => {
   // Using suspense-enabled data fetching

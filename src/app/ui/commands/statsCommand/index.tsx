@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react"
-import { CommandProps } from "../types"
+import type { CommandProps } from "../types"
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ISubmissionResults } from "app/api/stats/types";
 import { Text } from "app/ui/components/text";

@@ -3,8 +3,8 @@ import { FC } from "react";
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { Text } from "app/ui/components/text";
 import { getClosestCommand } from "app/ui/components/terminal/utils";
-import { COMMAND_MANUALS } from "../commandManuals";
-import { CommandProps } from "../types";
+import { getCommandManual } from "../commandManuals";
+import type { CommandProps } from "../types";
 
 export const ManCommand: FC<CommandProps> = ({ params = [] }) => {
   const requestedCommand = params[0];
@@ -18,7 +18,7 @@ export const ManCommand: FC<CommandProps> = ({ params = [] }) => {
     );
   }
 
-  const manual = COMMAND_MANUALS[requestedCommand];
+  const manual = getCommandManual(requestedCommand);
 
   if (!manual) {
     const suggestion = getClosestCommand(requestedCommand);

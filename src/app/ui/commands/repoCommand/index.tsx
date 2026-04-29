@@ -2,7 +2,7 @@ import { FC } from "react"
 
 import { Link } from "app/ui/components/link"
 import { Text } from "app/ui/components/text"
-import { CommandProps } from "../types"
+import type { CommandProps } from "../types"
 
 export const RepoCommand: FC<CommandProps> = () => {
   return (

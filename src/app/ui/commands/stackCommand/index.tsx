@@ -3,7 +3,7 @@ import { FC } from "react";
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { Link } from "app/ui/components/link";
 import { Text } from "app/ui/components/text";
-import { CommandProps } from "../types";
+import type { CommandProps } from "../types";
 
 const sourceBaseUrl =
   "https://github.com/zaknafeyn/personal-website/blob/main";
@@ -30,9 +30,9 @@ const sourceLinks = [
     text: "src/app/ui/components/terminal/index.tsx",
   },
   {
-    label: "commands",
-    url: `${sourceBaseUrl}/src/app/ui/commands/consts.ts`,
-    text: "src/app/ui/commands/consts.ts",
+    label: "registry",
+    url: `${sourceBaseUrl}/src/app/ui/commands/registry.ts`,
+    text: "src/app/ui/commands/registry.ts",
   },
   {
     label: "types",
@@ -98,10 +98,11 @@ export const StackCommand: FC<CommandProps> = () => {
             label: "command registry",
             values: [
               <>
-                Commands are registered through typed command names in{" "}
-                <Link url={sourceLinks[5].url}>{sourceLinks[5].text}</Link>{" "}
-                and component mappings in{" "}
+                Commands are registered in{" "}
                 <Link url={sourceLinks[4].url}>{sourceLinks[4].text}</Link>.
+                The compatibility types in{" "}
+                <Link url={sourceLinks[5].url}>{sourceLinks[5].text}</Link>{" "}
+                are derived from that registry.
               </>,
               <>
                 The terminal runtime parses input, restores the prompt after
@@ -157,10 +158,9 @@ export const StackCommand: FC<CommandProps> = () => {
               </>,
               <>
                 Keeping the command registry as plain TypeScript makes it easy
-                to extend and inspect, but it still has some duplication across
-                help text, manuals, and mappings. That is intentional for a
-                small site, and it leaves a clear path toward a single registry
-                if the command surface grows.
+                to extend and inspect, with command names, components, help
+                text, manuals, all-output membership, completion mode, and
+                disabled state living in one typed list.
               </>,
             ],
           },
@@ -168,8 +168,8 @@ export const StackCommand: FC<CommandProps> = () => {
             label: "source",
             values: [
               <>
-                Manual pages for commands live in{" "}
-                <Link url={sourceLinks[6].url}>{sourceLinks[6].text}</Link>,
+                Command metadata lives in{" "}
+                <Link url={sourceLinks[4].url}>{sourceLinks[4].text}</Link>,
                 and the full repository is available on{" "}
                 <Link url="https://github.com/zaknafeyn/personal-website">
                   GitHub

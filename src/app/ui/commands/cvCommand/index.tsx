@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useRef } from "react";
 import { downloadFile } from "app/ui/utils/downloadFile";
-import { CommandProps } from "../types";
+import type { CommandProps } from "../types";
 
 export const CvCommand: FC<CommandProps> = ({ args = [] }) => {
   const hasRun = useRef(false);

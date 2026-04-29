@@ -9,26 +9,14 @@ import { Loading } from "../loading";
 
 import {
   allCommands,
-  COMMAND_ABOUT,
-  COMMAND_CONTACTS,
-  COMMAND_GAME,
-  COMMAND_HELP,
-  COMMAND_NOW,
-  COMMAND_PROJECTS,
-  COMMAND_REPO,
-  COMMAND_SKILLS,
-  COMMAND_STACK,
-  COMMAND_STATS,
-  COMMAND_WEBSITE,
-  Command,
-  CommandProps,
-  UTILITY_COMMAND_ALL,
-  UTILITY_COMMAND_CV,
-} from "../../commands/types";
+  getCommandCompletionMode,
+  getCommandComponent,
+  resolveCommandName,
+  suggestedCommandEntries,
+} from "../../commands/registry";
+import type { Command, CommandProps } from "../../commands/types";
 import styles from './terminal.module.css';
-import { getClosestCommand, isEchoCommand, isUtilityCommand, isValidCommand } from "./utils";
-
-import { COMMANDS_MAPPING, UTILITY_COMMANDS_MAPPING } from "app/ui/commands/consts";
+import { getClosestCommand } from "./utils";
 import { parseCommand } from "app/ui/commands/parseCommand";
 import { Text } from "../text";
 
@@ -38,45 +26,12 @@ type TerminalProps = {
   welcomeMessage?: string;
 };
 
-type CommandCompletionMode = "rendered" | "resolved" | "manual";
-
-const RESOLVED_COMPLETION_COMMANDS: ReadonlySet<Command> = new Set([
-  COMMAND_SKILLS,
-  COMMAND_STATS,
-  UTILITY_COMMAND_ALL,
-]);
-
-const MANUAL_COMPLETION_COMMANDS: ReadonlySet<Command> = new Set([
-  COMMAND_GAME,
-]);
-
-const SUGGESTED_COMMANDS: ReadonlyArray<Command> = [
-  COMMAND_ABOUT,
-  COMMAND_NOW,
-  COMMAND_PROJECTS,
-  COMMAND_SKILLS,
-  COMMAND_STACK,
-  COMMAND_STATS,
-  COMMAND_REPO,
-  COMMAND_WEBSITE,
-  COMMAND_CONTACTS,
-  UTILITY_COMMAND_CV,
-  COMMAND_GAME,
-];
-
 function hasArg(args: CommandProps["args"], name: string): boolean {
   return args?.some((arg) => Boolean(arg[name])) ?? false;
 }
 
 function shouldShowHelpSuggestions(args: CommandProps["args"]): boolean {
   return hasArg(args, "links") || hasArg(args, "l");
-}
-
-function getCommandCompletionMode(command: Command): CommandCompletionMode {
-  if (MANUAL_COMPLETION_COMMANDS.has(command)) return "manual";
-  if (RESOLVED_COMPLETION_COMMANDS.has(command)) return "resolved";
-
-  return "rendered";
 }
 
 const CommandCompletionMarker: FC<{ onComplete: () => void }> = ({ onComplete }) => {
@@ -266,58 +221,44 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       return;
     }
 
-    const { command, args } = inputCommand;
-    if (!isValidCommand(command)) {
+    const resolvedCommand = resolveCommandName(inputCommand.command);
+
+    if (!resolvedCommand) {
       setOutput((prev) => [
         ...prev,
         commandRecord,
         <React.Fragment key={prev.length}>
-          <ErrorMessage command={command} suggestedCommand={getClosestCommand(command)} />
+          <ErrorMessage
+            command={inputCommand.command}
+            suggestedCommand={getClosestCommand(inputCommand.command)}
+          />
           <CommandCompletionMarker onComplete={finishCommand} />
         </React.Fragment>,
       ]);
 
       return;
     }
-    
-    if (isEchoCommand(command)) {
-      const Component = COMMANDS_MAPPING[command];
-      const props = {
-        args,
-        params: inputCommand.params,
-      };
 
-      if (command === COMMAND_HELP && shouldShowHelpSuggestions(args)) {
-        setShowCommandSuggestions(true);
-      }
+    const command = resolvedCommand;
+    const Component = getCommandComponent(command);
+    const { args } = inputCommand;
+    const props = {
+      args,
+      params: inputCommand.params,
+      clearOutput,
+    };
 
-      setOutput((prev) => [
-        ...prev,
-        commandRecord,
-        <React.Fragment key={prev.length}>
-          {renderCommandOutput(command, Component, props)}
-        </React.Fragment>,
-      ]);
-
-      return;
+    if (command === "help" && shouldShowHelpSuggestions(args)) {
+      setShowCommandSuggestions(true);
     }
 
-    if (isUtilityCommand(command)) {
-      const Component = UTILITY_COMMANDS_MAPPING[command];
-      const props = {
-        args,
-        params: inputCommand.params,
-        clearOutput,
-      };
-
-      const commandOutput = renderCommandOutput(command, Component, props);
-
-      setOutput((prev) => [
-        ...prev,
-        commandRecord,
-        <React.Fragment key={prev.length}>{commandOutput}</React.Fragment>,
-      ]);
-    }
+    setOutput((prev) => [
+      ...prev,
+      commandRecord,
+      <React.Fragment key={prev.length}>
+        {renderCommandOutput(command, Component, props)}
+      </React.Fragment>,
+    ]);
   };
 
   const getHistory = (direction: "up" | "down") => {
@@ -386,17 +327,17 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
         <TerminalOutput outputs={output} />
         {isCommandFinished && showCommandSuggestions && (
           <div className={styles.commandSuggestions} aria-label="Suggested commands">
-            {SUGGESTED_COMMANDS.filter((command) => allCommands.includes(command)).map(
+            {suggestedCommandEntries.map(
               (command, index) => (
                 <button
                   className={styles.commandSuggestion}
                   data-terminal-interactive="true"
-                  key={command}
-                  onClick={() => processCommand(command)}
+                  key={command.name}
+                  onClick={() => processCommand(command.name)}
                   ref={index === 0 ? firstSuggestionRef : undefined}
                   type="button"
                 >
-                  {command}
+                  {command.name}
                 </button>
               )
             )}

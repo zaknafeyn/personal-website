@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from "react";
 
-import { CommandProps } from "../types";
+import type { CommandProps } from "../types";
 import { Text } from "app/ui/components/text";
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { downloadFile } from "app/ui/utils/downloadFile";

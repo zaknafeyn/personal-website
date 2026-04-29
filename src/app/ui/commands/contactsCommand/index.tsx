@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { Link } from "app/ui/components/link";
-import { CommandProps } from "../types";
+import type { CommandProps } from "../types";
 
 export const ContactsCommand: FC<CommandProps> = () => {
   return (

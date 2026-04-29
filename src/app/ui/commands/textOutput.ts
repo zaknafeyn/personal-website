@@ -1,15 +1,6 @@
 import { ISkill } from "app/api/skills/types";
-import {
-  COMMAND_ABOUT,
-  COMMAND_CONTACTS,
-  COMMAND_HELP,
-  COMMAND_REPO,
-  COMMAND_SKILLS,
-  COMMAND_STATS,
-  COMMAND_WEBSITE,
-  Command,
-  UTILITY_COMMAND_ALL,
-} from "./types";
+import { allOutputCommands } from "./registry";
+import type { Command } from "./types";
 import {
   commandContentToPlainText,
   descriptionItemsToPlainText,
@@ -20,7 +11,6 @@ import {
   getSkillGroupsContent,
   getStatsContent,
   getWebsiteContent,
-  redirectedAllCommands,
   StatsData,
 } from "./content";
 
@@ -64,6 +54,7 @@ const getStatsOutput = async () => {
 };
 
 const getAllOutput = async () => {
+  const redirectedAllCommands = allOutputCommands.filter(canRedirectCommand);
   const output = await Promise.all(
     redirectedAllCommands.map(async (command) => {
       const text = await getCommandTextOutput(command);
@@ -76,14 +67,14 @@ const getAllOutput = async () => {
 };
 
 const commandTextOutputLoaders: Partial<Record<Command, TextOutputLoader>> = {
-  [COMMAND_HELP]: getHelpOutput,
-  [COMMAND_ABOUT]: getAboutOutput,
-  [COMMAND_CONTACTS]: getContactsOutput,
-  [COMMAND_REPO]: getRepoOutput,
-  [COMMAND_SKILLS]: getSkillsOutput,
-  [COMMAND_WEBSITE]: getWebsiteOutput,
-  [COMMAND_STATS]: getStatsOutput,
-  [UTILITY_COMMAND_ALL]: getAllOutput,
+  help: getHelpOutput,
+  about: getAboutOutput,
+  contacts: getContactsOutput,
+  repo: getRepoOutput,
+  skills: getSkillsOutput,
+  website: getWebsiteOutput,
+  stats: getStatsOutput,
+  all: getAllOutput,
 };
 
 export function canRedirectCommand(command: Command): boolean {

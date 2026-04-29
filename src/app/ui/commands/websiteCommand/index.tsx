@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Link } from 'app/ui/components/link';
 import { Text } from '../../components/text';
-import { CommandProps } from '../types';
+import type { CommandProps } from '../types';
 
 export const WebsiteCommand: FC<CommandProps> = () => {
   return (

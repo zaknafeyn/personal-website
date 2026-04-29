@@ -1,18 +1,17 @@
 import { FC, Fragment } from "react";
-import { allOutputCommands, CommandProps } from "../types";
-
-import { COMMANDS_MAPPING } from "../consts";
+import { allOutputCommandEntries } from "../registry";
+import type { CommandProps } from "../types";
 import styles from './allCommand.module.css';
 
 export const AllCommand: FC<CommandProps> = () => {
   return (
     <>
-      { allOutputCommands.map((command) => {
-          const Component = COMMANDS_MAPPING[command];
+      { allOutputCommandEntries.map((command) => {
+          const Component = command.component;
           
           return (
-            <Fragment key={command}>
-              <div className={styles.terminalHeading}>{command}</div>
+            <Fragment key={command.name}>
+              <div className={styles.terminalHeading}>{command.name}</div>
                 <Component />
             </Fragment>
           )
