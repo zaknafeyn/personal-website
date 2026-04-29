@@ -9,7 +9,7 @@ export const AboutCommand: FC<CommandProps> = () => {
   return (
     <div>
       <Text.Paragraph>
-        Hey there! Thanks for taking such a keen interest in me. 
+        Hey there! Thanks for taking such a keen interest in me.
       </Text.Paragraph>
 
       <Text.Paragraph>
@@ -23,26 +23,26 @@ export const AboutCommand: FC<CommandProps> = () => {
         <Text.Terminal textEffect="glow" quoted>
           Software Engineer
         </Text.Terminal>{" "}
-        born and grew in the beautiful Ukraine, in Kyiv.
+        born and raised in Kyiv, Ukraine.
       </Text.Paragraph>
 
       <Text.Paragraph>
-        I graduated with honour from the <Link url="https://kpi.ua/en/">National Technical University of Ukraine &ldquo;Igor Sikorsky Kyiv Polytechnic Institute&ldquo;</Link> with a
-        Master of Specialized Computer Systems degree in Computer Science. It comprised of
-        six years of computer science courses, as well as many hardware courses like theory of electric chains, circuit engineering etc.
+        I graduated with honors from the <Link url="https://kpi.ua/en/">National Technical University of Ukraine &ldquo;Igor Sikorsky Kyiv Polytechnic Institute&rdquo;</Link> with a
+        Master&apos;s degree in Computer Science, specializing in computer systems. The program included
+        six years of computer science courses alongside hardware-focused topics such as electrical circuit theory and circuit design.
       </Text.Paragraph>
       <Text.Paragraph>
-        Some of my interests include: web development, high load systems and mobile development.
+        My engineering interests include web development, high-load systems, product tooling, and mobile development.
       </Text.Paragraph>
       <Text.Paragraph>
-        Some of my hobbies include: playing the guitar, sailing and hiking.
+        Away from the keyboard, I like playing guitar, sailing, and hiking.
       </Text.Paragraph>
       <Text.Paragraph>
-        I speak Ukrainian (obviously), English, some French and russian. Message me in any of these languages, I would be happy to chat with you.
+        I speak Ukrainian (obviously), English, some French, and Russian. Message me in any of these languages; I&apos;d be happy to chat with you.
       </Text.Paragraph>
       <Text.Paragraph>
-        Please feel free to get in touch with me to discuss any cool
-        opportunities. My contact details can be found by typing
+        Please feel free to get in touch if you&apos;d like to discuss a strong
+        engineering opportunity, a useful product idea, or something pleasantly ambitious. My contact details can be found by typing
         &apos;contact&apos;, and if you would like to check out my{" "}
         <Text.Terminal textEffect="glow" quoted>
           CV

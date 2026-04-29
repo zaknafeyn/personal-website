@@ -11,18 +11,19 @@ export const RepoCommand: FC<CommandProps> = () => {
         Here is my <Link url="https://github.com/zaknafeyn">
           GitHub
         </Link>{" "}
+        profile.
       </Text.Paragraph>
 
       <Text.Paragraph>
-        Unfortunately, I could only make a small subset of my projects public. Most of my contributions done into private repos, at least you could see my activity and some stats.
+        A lot of my professional work lives in private repositories, so the public set is only part of the story. Still, you can see my activity, open-source work, and a few useful artifacts from the engineering trail.
       </Text.Paragraph>
       
       <Text.Paragraph>
-        You could try my vscode extension <Link url="https://github.com/zaknafeyn/git-smart-checkout">Git Smart Checkout</Link> that does auto stash when switching a branch
+        You can try my VS Code extension, <Link url="https://github.com/zaknafeyn/git-smart-checkout">Git Smart Checkout</Link>, which automatically stashes local changes when switching branches.
       </Text.Paragraph>
 
       <Text.Paragraph>
-        Review <Link url="https://github.com/zaknafeyn/personal-website">source code</Link> of this website
+        You can also browse the <Link url="https://github.com/zaknafeyn/personal-website">source code</Link> for this website.
       </Text.Paragraph>
     </>
   )

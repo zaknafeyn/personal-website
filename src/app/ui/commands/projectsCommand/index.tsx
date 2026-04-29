@@ -28,7 +28,7 @@ const caseStudies: CaseStudy[] = [
     role:
       "Senior Software Engineer and Team Lead for an international team of 6 developers; organized work, reviewed code, tested features, and tightened feedback loops.",
     constraints:
-      "Fast release cadence, distributed collaboration, high-quality code reviews, crash prevention before deployment, and UI/UX changes that had to be proven through A/B tests.",
+      "Fast release cadence, distributed collaboration, thorough code reviews, crash prevention before deployment, and UI/UX changes that had to be proven through A/B tests.",
     stack:
       "TypeScript, React, GitHub Actions, automated tests, product analytics, A/B experimentation.",
     architecture:
@@ -48,7 +48,7 @@ const caseStudies: CaseStudy[] = [
       "Team Lead responsible for feature design, release coordination, frontend/backend implementation direction, and task organization.",
     constraints:
       "Internal users needed practical speed, the CRM had to drive embeddable profile widgets, and releases had to fit an existing production workflow.",
-    stack: ".NET 5, ReactJS, Docker, Kubernetes.",
+    stack: ".NET 5, React, Docker, Kubernetes.",
     architecture:
       "Used the CRM as the source of truth for settings, generated widgets dynamically from those settings, and shipped the system in a containerized deployment model.",
     tradeoffs:
@@ -61,7 +61,7 @@ const caseStudies: CaseStudy[] = [
     summary:
       "Release process automation across build and test stages for multi-project delivery.",
     problem:
-      "Manual build and test stages were consuming engineering time and slowing releases across several mid-term projects.",
+      "Manual build and test stages were consuming engineering time and slowing releases across several medium-term projects.",
     role:
       "Full-stack developer, architect, and team lead across different projects, with responsibility for improving release discipline and engineering throughput.",
     constraints:
@@ -72,7 +72,7 @@ const caseStudies: CaseStudy[] = [
     tradeoffs:
       "Automation took time away from short-term feature work, but paid back by removing repeated manual steps and making quality checks more repeatable.",
     result:
-      "Reduced testing time by more than 50 hours per month while maintaining rigorous quality standards through development phases.",
+      "Reduced testing time by more than 50 hours per month while maintaining rigorous quality standards throughout development.",
   },
   {
     title: "Education management system for teacher substitution",
@@ -81,7 +81,7 @@ const caseStudies: CaseStudy[] = [
     problem:
       "A teacher substitution exchange provider needed better access to real-time updates and a smoother experience for daily education operations.",
     role:
-      "Engineering contributor on a mid-term project, working across frontend delivery and system integration concerns.",
+      "Engineering contributor on a medium-term project, working across frontend delivery and system integration concerns.",
     constraints:
       "The interface had to be simple enough for frequent operational use while still reflecting live changes reliably.",
     stack: "React, API integrations, real-time update flows.",

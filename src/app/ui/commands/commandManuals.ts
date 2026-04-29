@@ -59,7 +59,7 @@ export const COMMAND_MANUALS: Record<string, ManualEntry> = {
   [COMMAND_REPO]: {
     name: "repo",
     synopsis: "repo",
-    description: "Shows links to public code repositories and related work.",
+    description: "Shows links to public repositories, open-source work, and related code artifacts.",
   },
   [COMMAND_SKILLS]: {
     name: "skills",
@@ -69,7 +69,7 @@ export const COMMAND_MANUALS: Record<string, ManualEntry> = {
   [COMMAND_WEBSITE]: {
     name: "website",
     synopsis: "website",
-    description: "Explains how this website was built.",
+    description: "Explains how this terminal-style website was built.",
   },
   [COMMAND_STACK]: {
     name: "stack",
