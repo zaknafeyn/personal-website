@@ -13,6 +13,7 @@ import {
   COMMAND_SKILLS,
   COMMAND_STACK,
   COMMAND_STATS,
+  COMMAND_VERSION,
   COMMAND_WEBSITE,
   CommandProps,
   UTILITY_COMMAND_ALL,
@@ -85,6 +86,11 @@ export const HelpCommand: FC<CommandProps> = () => {
         label: COMMAND_NOW,
         values: ["Current focus, learning goals, recent work, and availability"],
         isDisabled: !allCommandsArr.includes(COMMAND_NOW),
+      },
+      {
+        label: COMMAND_VERSION,
+        values: ["Shows the current package, commit, and deployment version"],
+        isDisabled: !allCommandsArr.includes(COMMAND_VERSION),
       },
       {
         label: UTILITY_COMMAND_ALL,

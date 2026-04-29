@@ -14,6 +14,7 @@ import { GameCommand } from "./gameCommand";
 import { ManCommand } from "./manCommand";
 import { StackCommand } from "./stackCommand";
 import { NowCommand } from "./nowCommand";
+import { VersionCommand } from "./versionCommand";
 
 export {
   AboutCommand,
@@ -32,4 +33,5 @@ export {
   ManCommand,
   StackCommand,
   NowCommand,
+  VersionCommand,
 };

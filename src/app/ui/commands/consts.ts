@@ -15,6 +15,7 @@ import {
   ProjectsCommand,
   StackCommand,
   NowCommand,
+  VersionCommand,
 } from ".";
 
 import {
@@ -28,6 +29,7 @@ import {
   COMMAND_SKILLS,
   COMMAND_STACK,
   COMMAND_STATS,
+  COMMAND_VERSION,
   COMMAND_WEBSITE,
   CommandProps,
   EchoCommand,
@@ -53,6 +55,7 @@ export const COMMANDS_MAPPING: {
   [COMMAND_NOW]: NowCommand,
   [COMMAND_STATS]: StatsCommand,
   [COMMAND_GAME]: GameCommand,
+  [COMMAND_VERSION]: VersionCommand,
 };
 
 export const UTILITY_COMMANDS_MAPPING: {

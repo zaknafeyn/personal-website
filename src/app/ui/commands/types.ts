@@ -12,6 +12,7 @@ export const COMMAND_STACK = "stack";
 export const COMMAND_NOW = "now";
 export const COMMAND_STATS = "stats";
 export const COMMAND_GAME = "game";
+export const COMMAND_VERSION = "version";
 
 export const UTILITY_COMMAND_CLEAR = "clear";
 export const UTILITY_COMMAND_ALL = "all";
@@ -31,6 +32,7 @@ export const echoCommands = [
   COMMAND_NOW,
   COMMAND_STATS,
   COMMAND_GAME,
+  COMMAND_VERSION,
 ] as const;
 
 export type EchoCommand = (typeof echoCommands)[number];
@@ -47,6 +49,7 @@ export const allOutputCommands = [
   COMMAND_NOW,
   COMMAND_STATS,
   COMMAND_GAME,
+  COMMAND_VERSION,
 ] as const satisfies readonly EchoCommand[];
 
 export const utilityCommands = [

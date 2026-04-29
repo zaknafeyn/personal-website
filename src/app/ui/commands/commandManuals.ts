@@ -9,6 +9,7 @@ import {
   COMMAND_SKILLS,
   COMMAND_STACK,
   COMMAND_STATS,
+  COMMAND_VERSION,
   COMMAND_WEBSITE,
   UTILITY_COMMAND_ALL,
   UTILITY_COMMAND_CLEAR,
@@ -98,6 +99,13 @@ export const COMMAND_MANUALS: Record<string, ManualEntry> = {
     synopsis: "game",
     description: "Starts an interactive terminal game.",
     notes: ["The prompt stays hidden while the game is running."],
+  },
+  [COMMAND_VERSION]: {
+    name: "version",
+    synopsis: "version",
+    description:
+      "Prints the current package version, git commit hash, and deployment id.",
+    notes: ["Output format: package+commit+deployment."],
   },
   [UTILITY_COMMAND_CV]: {
     name: "cv",
