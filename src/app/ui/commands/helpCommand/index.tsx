@@ -10,6 +10,7 @@ import {
   COMMAND_PROJECTS,
   COMMAND_REPO,
   COMMAND_SKILLS,
+  COMMAND_STACK,
   COMMAND_STATS,
   COMMAND_WEBSITE,
   CommandProps,
@@ -73,6 +74,11 @@ export const HelpCommand: FC<CommandProps> = () => {
         label: COMMAND_WEBSITE,
         values: ["How I built this"],
         isDisabled: !allCommandsArr.includes(COMMAND_WEBSITE),
+      },
+      {
+        label: COMMAND_STACK,
+        values: ["Architecture, stack, tradeoffs, deployment, and source links"],
+        isDisabled: !allCommandsArr.includes(COMMAND_STACK),
       },
       {
         label: UTILITY_COMMAND_ALL,

@@ -6,6 +6,7 @@ import {
   COMMAND_PROJECTS,
   COMMAND_REPO,
   COMMAND_SKILLS,
+  COMMAND_STACK,
   COMMAND_STATS,
   COMMAND_WEBSITE,
   UTILITY_COMMAND_ALL,
@@ -63,6 +64,15 @@ export const COMMAND_MANUALS: Record<string, ManualEntry> = {
     name: "website",
     synopsis: "website",
     description: "Explains how this website was built.",
+  },
+  [COMMAND_STACK]: {
+    name: "stack",
+    synopsis: "stack",
+    description:
+      "Explains this website's App Router architecture, React Query data layer, command registry, API routes, deployment model, source links, and tradeoffs.",
+    notes: [
+      "This command focuses on the website architecture; the skills command shows a broader skill matrix.",
+    ],
   },
   [COMMAND_STATS]: {
     name: "stats",
