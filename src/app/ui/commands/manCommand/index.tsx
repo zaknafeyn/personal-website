@@ -80,6 +80,22 @@ export const ManCommand: FC<CommandProps> = ({ params = [] }) => {
         </>
       )}
 
+      {manual.redirects && (
+        <>
+          <Text.SubHeader>REDIRECTION</Text.SubHeader>
+          <DescriptionList
+            items={manual.redirects.map((redirect) => {
+              const [label, ...description] = redirect.split(/\s{2,}/);
+
+              return {
+                label,
+                values: [description.join(" ")],
+              };
+            })}
+          />
+        </>
+      )}
+
       {manual.notes && (
         <>
           <Text.SubHeader>NOTES</Text.SubHeader>

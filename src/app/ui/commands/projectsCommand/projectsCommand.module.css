@@ -1,0 +1,11 @@
+.caseStudy {
+  margin-block: 1.4em;
+}
+
+.caseStudy:last-child {
+  margin-block-end: 0;
+}
+
+.caseTitle {
+  margin-block-end: 0.4em;
+}

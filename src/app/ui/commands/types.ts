@@ -19,7 +19,7 @@ export const UTILITY_COMMAND_MAN = "man";
 export const echoCommands = [
   COMMAND_HELP,
   COMMAND_ABOUT,
-  // COMMAND_PROJECTS,
+  COMMAND_PROJECTS,
   COMMAND_CONTACTS,
   // COMMAND_AWARDS,
   COMMAND_REPO,
@@ -30,6 +30,18 @@ export const echoCommands = [
 ] as const;
 
 export type EchoCommand = (typeof echoCommands)[number];
+
+export const allOutputCommands = [
+  COMMAND_HELP,
+  COMMAND_ABOUT,
+  COMMAND_CONTACTS,
+  // COMMAND_AWARDS,
+  COMMAND_REPO,
+  COMMAND_SKILLS,
+  COMMAND_WEBSITE,
+  COMMAND_STATS,
+  COMMAND_GAME,
+] as const satisfies readonly EchoCommand[];
 
 export const utilityCommands = [
   UTILITY_COMMAND_CLEAR,

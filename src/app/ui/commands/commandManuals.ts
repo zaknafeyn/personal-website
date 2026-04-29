@@ -3,6 +3,7 @@ import {
   COMMAND_CONTACTS,
   COMMAND_GAME,
   COMMAND_HELP,
+  COMMAND_PROJECTS,
   COMMAND_REPO,
   COMMAND_SKILLS,
   COMMAND_STATS,
@@ -19,6 +20,7 @@ type ManualEntry = {
   description: string;
   arguments?: string[];
   options?: string[];
+  redirects?: string[];
   notes?: string[];
 };
 
@@ -32,6 +34,15 @@ export const COMMAND_MANUALS: Record<string, ManualEntry> = {
     name: "about",
     synopsis: "about",
     description: "Prints a longer personal introduction, background, interests, and CV/contact hints.",
+  },
+  [COMMAND_PROJECTS]: {
+    name: "projects",
+    synopsis: "projects [> file.txt]",
+    description:
+      "Shows concise engineering case studies with problems, roles, constraints, stacks, architecture decisions, tradeoffs, and measurable results.",
+    redirects: [
+      "> file.txt    Downloads the plain-text projects output to the named file instead of printing the case studies in the terminal.",
+    ],
   },
   [COMMAND_CONTACTS]: {
     name: "contacts",

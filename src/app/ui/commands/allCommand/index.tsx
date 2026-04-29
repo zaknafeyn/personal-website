@@ -1,5 +1,5 @@
 import { FC, Fragment } from "react";
-import { CommandProps, echoCommands } from "../types";
+import { allOutputCommands, CommandProps } from "../types";
 
 import { COMMANDS_MAPPING } from "../consts";
 import styles from './allCommand.module.css';
@@ -7,7 +7,7 @@ import styles from './allCommand.module.css';
 export const AllCommand: FC<CommandProps> = () => {
   return (
     <>
-      { echoCommands.map((command) => {
+      { allOutputCommands.map((command) => {
           const Component = COMMANDS_MAPPING[command];
           
           return (

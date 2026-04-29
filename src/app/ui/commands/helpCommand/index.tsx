@@ -31,7 +31,7 @@ export const HelpCommand: FC<CommandProps> = () => {
       },
       {
         label: COMMAND_PROJECTS,
-        values: ["Yeah, I've made some cool stuff before"],
+        values: ["Engineering case studies, tradeoffs, results, and links"],
         isDisabled: !allCommandsArr.includes(COMMAND_PROJECTS),
       },
       {
