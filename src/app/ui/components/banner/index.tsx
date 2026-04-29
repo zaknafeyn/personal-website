@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Text } from "../text";
 
 type BannerProps = {
   bannerTitle: string;
-  bannerSubTitle?: string;
+  bannerSubTitle?: ReactNode;
 };
 
 const Banner = ({ bannerTitle, bannerSubTitle }: BannerProps) => {
