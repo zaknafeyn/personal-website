@@ -4,6 +4,7 @@ export type ParsedArg = Record<string, string | boolean | string[]>;
 export interface ParsedCommand {
   command: string;
   args?: ParsedArg[];
+  params?: string[];
 }
 
 export function parseCommand(input: string): ParsedCommand {
@@ -14,6 +15,7 @@ export function parseCommand(input: string): ParsedCommand {
 
   const command = tokens[0];
   const args: ParsedArg[] = [];
+  const params: string[] = [];
 
   const argMap: Record<string, string[] | true | string> = {};
 
@@ -44,6 +46,8 @@ export function parseCommand(input: string): ParsedCommand {
           argMap[flag] = true;
         }
       }
+    } else {
+      params.push(token);
     }
   }
 
@@ -51,7 +55,7 @@ export function parseCommand(input: string): ParsedCommand {
     args.push({ [key]: value });
   }
 
-  return { command, args };
+  return { command, args, params };
 }
 
 // Tokenizer with quoted strings handling

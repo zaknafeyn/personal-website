@@ -14,6 +14,7 @@ export const COMMAND_GAME = "game";
 export const UTILITY_COMMAND_CLEAR = "clear";
 export const UTILITY_COMMAND_ALL = "all";
 export const UTILITY_COMMAND_CV = "cv";
+export const UTILITY_COMMAND_MAN = "man";
 
 export const echoCommands = [
   COMMAND_HELP,
@@ -34,6 +35,7 @@ export const utilityCommands = [
   UTILITY_COMMAND_CLEAR,
   UTILITY_COMMAND_ALL,
   UTILITY_COMMAND_CV,
+  UTILITY_COMMAND_MAN,
 ] as const;
 
 export type UtilityCommand = (typeof utilityCommands)[number];
@@ -49,5 +51,6 @@ export type Command = (typeof allCommands)[number];
 export interface CommandProps {
   onComplete?: () => void;
   args?: ParsedArg[];
+  params?: string[];
   clearOutput?: () => void;
 }

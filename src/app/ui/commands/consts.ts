@@ -11,6 +11,7 @@ import {
   SkillsCommand,
   WebsiteCommand,
   GameCommand,
+  ManCommand,
 } from ".";
 
 import {
@@ -27,6 +28,7 @@ import {
   UTILITY_COMMAND_ALL,
   UTILITY_COMMAND_CLEAR,
   UTILITY_COMMAND_CV,
+  UTILITY_COMMAND_MAN,
   UtilityCommand,
 } from "./types";
 
@@ -51,4 +53,5 @@ export const UTILITY_COMMANDS_MAPPING: {
   [UTILITY_COMMAND_CV]: CvCommand,
   [UTILITY_COMMAND_ALL]: AllCommand,
   [UTILITY_COMMAND_CLEAR]: ClearCommand,
+  [UTILITY_COMMAND_MAN]: ManCommand,
 };

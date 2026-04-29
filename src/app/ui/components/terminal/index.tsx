@@ -233,11 +233,16 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     
     if (isEchoCommand(command)) {
       const Component = COMMANDS_MAPPING[command];
+      const props = {
+        args,
+        params: inputCommand.params,
+      };
+
       setOutput((prev) => [
         ...prev,
         commandRecord,
         <React.Fragment key={prev.length}>
-          {renderCommandOutput(command, Component)}
+          {renderCommandOutput(command, Component, props)}
         </React.Fragment>,
       ]);
 
@@ -248,6 +253,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       const Component = UTILITY_COMMANDS_MAPPING[command];
       const props = {
         args,
+        params: inputCommand.params,
         clearOutput,
       };
 

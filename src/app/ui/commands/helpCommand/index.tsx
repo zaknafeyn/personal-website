@@ -16,6 +16,7 @@ import {
   UTILITY_COMMAND_ALL,
   UTILITY_COMMAND_CLEAR,
   UTILITY_COMMAND_CV,
+  UTILITY_COMMAND_MAN,
 } from "../types";
 
 export const HelpCommand: FC<CommandProps> = () => {
@@ -82,6 +83,11 @@ export const HelpCommand: FC<CommandProps> = () => {
         label: UTILITY_COMMAND_CLEAR,
         values: ["Clears the terminal of all output"],
         isDisabled: !allCommandsArr.includes(UTILITY_COMMAND_CLEAR),
+      },
+      {
+        label: UTILITY_COMMAND_MAN,
+        values: ["Displays a brief manual page for a command"],
+        isDisabled: !allCommandsArr.includes(UTILITY_COMMAND_MAN),
       },
     ],
     []
