@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useMemo, useState } from "react"
+import { FC, Fragment, useMemo } from "react"
 import { useSuspenseQuery } from '@tanstack/react-query'; // or your preferred data fetching library
 
 import { ISkill, SKILL_GROUP_NAME, TSkillGroup } from "app/api/skills/types";
@@ -63,69 +63,6 @@ export const SkillsCommand: FC<CommandProps> = () => {
           <Fragment key={group}>
             <div className="terminal-heading" key={group}>{SKILL_GROUP_NAME[group]}</div>
             <DescriptionList items={getListItemsForGroup(group)} />
-          </Fragment>
-        )
-      })}
-    </>
-  )
-}
-
-export const SkillsCommand1 = () => {
-  const [skills, setSkills] = useState<ISkill[]>([]);
-
-  useEffect(() => {
-    
-    const fetchSkills = async () => { 
-      const response = await fetch("/api/skills");
-      const { skills } = await response.json();
-      setSkills(skills);
-    }
-    
-    fetchSkills();
-  }, []);
-
-  const { aggregatedSkills, groups } = useMemo(() => {
-
-    const aggregatedSkills: Record<string, ISkill[]> = {};
-    const groups = new Set<TSkillGroup>();
-
-    for (const skill of skills) {
-      const { group } = skill;
-      groups.add(group);
-      if (!aggregatedSkills[group]) aggregatedSkills[group] = [];
-      aggregatedSkills[group].push(skill);
-    }
-
-    for (const group in aggregatedSkills) {
-      aggregatedSkills[group].sort((a, b) => b.level - a.level);
-    }
-    return { aggregatedSkills, groups: Array.from(groups) };
-  }, [skills]);
-
-  const getListItemsForGroup = (group: string) => {
-    return aggregatedSkills[group].map(skill => {
-      return {
-        label: skill.name,
-        values: [
-          <>
-            ##{" "}
-            <span className={styles[`level-${skill.level}`]}>
-              {Array(skill.level).fill("#").join("") }
-            </span>{" "}
-            ##
-          </>
-        ]
-      }
-     })
-  }
-  
-  return (
-    <>
-      {groups.map(group => {
-        return (
-          <Fragment key={group}>
-            <div className="terminal-heading" key={group}>{SKILL_GROUP_NAME[group]}</div>
-            <DescriptionList items={getListItemsForGroup(group)}/>
           </Fragment>
         )
       })}

@@ -11,7 +11,7 @@
   padding-block: 0;
   padding-inline: 0;
 
-  s &::placeholder {
+  &::placeholder {
     color: var(--color-input-placeholder);
     opacity: 0.5;
   }

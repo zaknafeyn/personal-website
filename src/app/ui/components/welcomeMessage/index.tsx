@@ -4,38 +4,18 @@ import { Text } from "../text";
 
 type WelcomeMessageProps = {
   message: string;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  inputAreaRef: React.RefObject<HTMLInputElement | null>;
+  onComplete: () => void;
 };
 
-const WelcomeMessage: FC<WelcomeMessageProps> = ({ inputRef, inputAreaRef, message}) => {
+const WelcomeMessage: FC<WelcomeMessageProps> = ({ message, onComplete }) => {
   const [visibleMessage, setVisibleMessage] = useState("");
 
   useEffect(() => {
-    if (inputRef?.current) {
-      inputRef.current.disabled = true;
-    }
-
-    if (inputAreaRef?.current) {
-      inputAreaRef.current.style.visibility = 'hidden'
-    }
-
     let index = 0;
     setVisibleMessage("");
 
-    const finishTyping = () => {
-      if (inputAreaRef?.current) {
-        inputAreaRef.current.style.visibility = 'visible';
-      }
-
-      if (inputRef?.current) {
-        inputRef.current.disabled = false;
-        inputRef.current.focus();
-      }
-    };
-
     if (!message.length) {
-      finishTyping();
+      onComplete();
       return;
     }
 
@@ -45,15 +25,14 @@ const WelcomeMessage: FC<WelcomeMessageProps> = ({ inputRef, inputAreaRef, messa
 
       if (index >= message.length) {
         clearInterval(typeText);
-        finishTyping();
+        onComplete();
       }
     }, 20);
 
     return () => {
       clearInterval(typeText);
-      finishTyping();
     };
-  }, [inputRef, message, inputAreaRef]);
+  }, [message, onComplete]);
 
   return (
     <Text.Terminal className={styles.terminalWelcomeMessage}>{visibleMessage}</Text.Terminal>

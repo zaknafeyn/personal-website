@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+
 import { getGFEStats } from "./getGFEStats";
 import { getLeetcodeStats, LeetcodeStatsError } from "./getLeetcodeStats";
 import type { ISubmissionResults } from "./types";
@@ -7,15 +9,9 @@ interface StatsResponse {
   gfeStats: ISubmissionResults[];
 }
 
-const CACHE_TTL_MS = 60 * 1000;
+const STATS_CACHE_SECONDS = 60;
+const CACHE_CONTROL_HEADER = `public, max-age=${STATS_CACHE_SECONDS}, stale-while-revalidate=30`;
 const LEETCODE_REQUEST_TIMEOUT_MS = 5000;
-
-let cachedStats:
-  | {
-      expiresAt: number;
-      data: StatsResponse;
-    }
-  | undefined;
 
 const getErrorStatus = (error: LeetcodeStatsError): number => {
   switch (error.code) {
@@ -39,20 +35,11 @@ const jsonError = (error: LeetcodeStatsError) =>
     { status: getErrorStatus(error) }
   );
 
-export async function GET() {
-  if (cachedStats && cachedStats.expiresAt > Date.now()) {
-    return Response.json(cachedStats.data, {
-      headers: {
-        "Cache-Control": "public, max-age=60, stale-while-revalidate=30",
-      },
+const getCachedStats = unstable_cache(
+  async (leetcodeUsername: string | undefined): Promise<StatsResponse> => {
+    const leetcodeStatsPromise = getLeetcodeStats(leetcodeUsername, {
+      timeoutMs: LEETCODE_REQUEST_TIMEOUT_MS,
     });
-  }
-
-  try {
-    const leetcodeStatsPromise = getLeetcodeStats(
-      process.env.LEETCODE_USERNAME,
-      { timeoutMs: LEETCODE_REQUEST_TIMEOUT_MS }
-    );
 
     const gfeStatsPromise = getGFEStats();
 
@@ -61,16 +48,19 @@ export async function GET() {
       gfeStatsPromise,
     ]);
 
-    const data = { leetcodeStats, gfeStats };
+    return { leetcodeStats, gfeStats };
+  },
+  ["stats"],
+  { revalidate: STATS_CACHE_SECONDS }
+);
 
-    cachedStats = {
-      data,
-      expiresAt: Date.now() + CACHE_TTL_MS,
-    };
+export async function GET() {
+  try {
+    const data = await getCachedStats(process.env.LEETCODE_USERNAME);
 
     return Response.json(data, {
       headers: {
-        "Cache-Control": "public, max-age=60, stale-while-revalidate=30",
+        "Cache-Control": CACHE_CONTROL_HEADER,
       },
     });
   } catch (error) {

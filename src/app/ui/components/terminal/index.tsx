@@ -132,11 +132,16 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(3);
   const [isCommandFinished, setIsCommandFinished] = useState<boolean>(true);
+  const [welcomeFinished, setWelcomeFinished] = useState(() => !welcomeMessage);
   const [showCommandSuggestions, setShowCommandSuggestions] = useState(false);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
-  const inputAreaRef = React.useRef<HTMLInputElement | null>(null);
+  const inputAreaRef = React.useRef<HTMLDivElement | null>(null);
   const firstSuggestionRef = React.useRef<HTMLButtonElement | null>(null);
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setWelcomeFinished(!welcomeMessage);
+  }, [welcomeMessage]);
 
   useEffect(() => {
     const input = inputRef.current;
@@ -163,7 +168,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       window.removeEventListener('focus', keepFocus, true);
       input.removeEventListener('blur', keepFocus);
     };
-  }, [isCommandFinished]);
+  }, [isCommandFinished, welcomeFinished]);
 
   const scrollLastCommandTop = () => {
     scrollRef.current?.scrollIntoView();
@@ -174,6 +179,10 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
   const finishCommand = useCallback(() => {
     setIsCommandFinished(true)
   }, [])
+
+  const finishWelcome = useCallback(() => {
+    setWelcomeFinished(true);
+  }, []);
 
   const clearOutput = useCallback(() => {
     setOutput([]);
@@ -372,7 +381,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       <div className={styles.terminalContent}>
         {banner}
         {welcomeMessage && (
-          <WelcomeMessage message={welcomeMessage} inputRef={inputRef} inputAreaRef={inputAreaRef} />
+          <WelcomeMessage message={welcomeMessage} onComplete={finishWelcome} />
         )}
         <TerminalOutput outputs={output} />
         {isCommandFinished && showCommandSuggestions && (
@@ -393,7 +402,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
             )}
           </div>
         )}
-        {isCommandFinished && <InputArea
+        {isCommandFinished && welcomeFinished && <InputArea
           setOutput={setOutput}
           processCommand={processCommand}
           getHistory={getHistory}

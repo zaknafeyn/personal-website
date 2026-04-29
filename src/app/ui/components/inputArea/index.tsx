@@ -10,7 +10,7 @@ type InputAreaProps = {
   getHistory: (direction: "up" | "down") => string;
   getAutocomplete: (input: string) => string;
   inputRef: React.RefObject<HTMLInputElement | null>;
-  inputAreaRef: React.RefObject<HTMLInputElement | null>;
+  inputAreaRef: React.RefObject<HTMLDivElement | null>;
   allowEmptyTabNavigation?: boolean;
   onEmptyTab?: () => void;
   placeholder?: string;

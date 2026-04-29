@@ -44,8 +44,12 @@ function getEditDistance(source: string, target: string): number {
 }
 
 function isCloseCommandMatch(input: string, command: Command, distance: number): boolean {
+  if (input.length < 2) {
+    return false;
+  }
+
   const longestLength = Math.max(input.length, command.length);
-  const maxAllowedDistance = Math.max(1, Math.floor(longestLength * 0.8));
+  const maxAllowedDistance = Math.max(1, Math.ceil(longestLength / 3));
 
   return distance <= maxAllowedDistance;
 }
