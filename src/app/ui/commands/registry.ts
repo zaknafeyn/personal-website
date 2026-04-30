@@ -1,10 +1,10 @@
 import type { ComponentType } from "react";
 import { AboutCommand, getTextOutput as getAboutTextOutput } from "./aboutCommand";
 import { AllCommand, getTextOutput as getAllTextOutput } from "./allCommand";
-import { AwardsCommand } from "./awardsCommand";
 import { runClearCommandEffect } from "./clearCommand";
 import { ContactsCommand, getTextOutput as getContactsTextOutput } from "./contactsCommand";
 import { runCvCommandEffect } from "./cvCommand";
+import { ExperienceCommand, getTextOutput as getExperienceTextOutput } from "./experienceCommand";
 import { GameCommand } from "./gameCommand";
 import { HelpCommand, getTextOutput as getHelpTextOutput } from "./helpCommand";
 import { ManCommand } from "./manCommand";
@@ -134,6 +134,29 @@ export const commandRegistry = [
     suggested: true,
   },
   {
+    name: "experience",
+    aliases: ["timeline"],
+    component: ExperienceCommand,
+    getTextOutput: getExperienceTextOutput,
+    description: "Chronological career progression by role, domain, and themes",
+    manual: {
+      name: "experience",
+      synopsis: "experience [> file.txt]",
+      description:
+        "Shows a chronological career timeline with role, domain, and main engineering themes for each stage.",
+      redirects: [fileRedirectManual],
+      notes: [
+        "timeline is an alias for experience.",
+        "Use projects for deeper case studies and outcomes from selected work.",
+      ],
+    },
+    includeInAll: true,
+    completionMode: "rendered",
+    enabled: true,
+    kind: "echo",
+    suggested: true,
+  },
+  {
     name: "contacts",
     aliases: [],
     component: ContactsCommand,
@@ -150,22 +173,6 @@ export const commandRegistry = [
     enabled: true,
     kind: "echo",
     suggested: true,
-  },
-  {
-    name: "awards",
-    aliases: [],
-    component: AwardsCommand,
-    description: "A bit of boasting",
-    manual: {
-      name: "awards",
-      synopsis: "awards",
-      description: "Shows awards and recognitions.",
-      notes: ["This command is currently disabled until the content is refreshed."],
-    },
-    includeInAll: false,
-    completionMode: "rendered",
-    enabled: false,
-    kind: "echo",
   },
   {
     name: "repo",

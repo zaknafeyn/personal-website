@@ -246,6 +246,91 @@ export const getNowContent = (): CommandContent => ({
   ],
 });
 
+export const getExperienceContent = (): CommandContent => ({
+  paragraphs: [
+    text(
+      "A chronological career timeline from my CV and earlier professional history, with the current profile context reflected on ",
+      {
+        type: "link",
+        text: "LinkedIn",
+        url: "https://www.linkedin.com/in/valentineradchuk/",
+      },
+      "."
+    ),
+    text(
+      "The short version: full-stack engineering grew into architecture, release automation, team leadership, product tooling, and conversion-minded frontend work."
+    ),
+  ],
+  descriptionItems: [
+    {
+      label: "Early career",
+      values: [
+        text(
+          "Vimas Technologies - Software Developer. Domain: custom software development, outsourcing, and business applications for international clients."
+        ),
+        text(
+          "Main themes: production engineering foundations, database-backed applications, client-driven delivery, C#/.NET and adjacent enterprise technologies, and learning to turn broad requirements into working software."
+        ),
+      ],
+    },
+    {
+      label: "Dec 2009 - Apr 2010",
+      values: [
+        text(
+          "GlobalLogic - Software Engineer. Domain: product engineering and outsourced software delivery for larger international technology programs."
+        ),
+        text(
+          "Main themes: larger-team development, delivery discipline, code quality, cross-functional collaboration, client communication, and growing from individual implementation into broader engineering ownership."
+        ),
+      ],
+    },
+    {
+      label: "May 2010 - Jul 2014",
+      values: [
+        text(
+          "Luxoft - Software Developer. Domain: enterprise software consulting and client-facing delivery for complex business systems."
+        ),
+        text(
+          "Main themes: mature delivery practices, enterprise application work, integration-heavy systems, maintainability, mentoring habits, and the transition toward architecture and lead responsibilities."
+        ),
+      ],
+    },
+    {
+      label: "Oct 2014 - May 2021",
+      values: [
+        text(
+          "Star - FullStack Developer. Domain: multi-project software delivery across client applications, education systems, metrics APIs, and logistics self-service kiosks."
+        ),
+        text(
+          "Main themes: full-stack development, architecture, team leadership on selected projects, CI/CD release automation, React, .NET, UWP, real-time operational workflows, and reducing manual processing."
+        ),
+      ],
+    },
+    {
+      label: "Jun 2021 - May 2022",
+      values: [
+        text(
+          "Parimatch Tech - Team Lead. Domain: internal CRM and configurable user-profile widgets driven by CRM settings."
+        ),
+        text(
+          "Main themes: frontend and backend design, release coordination, task organization, .NET 5, React, Docker, Kubernetes, and removing operational bottlenecks."
+        ),
+      ],
+    },
+    {
+      label: "Apr 2022 - Present",
+      values: [
+        text(
+          "Aura - Senior Software Engineer / Team Lead. Domain: enrollment and onboarding product flows, with a focus on shippable product quality and conversion."
+        ),
+        text(
+          "Main themes: leading a distributed team of 6 developers, rigorous review and testing loops, GitHub Actions CI/CD under one minute, A/B-tested UI/UX improvements, internal developer tools, and turning early-stage concepts into ready-to-ship products."
+        ),
+      ],
+    },
+  ],
+});
+
 const sourceBaseUrl =
   "https://github.com/zaknafeyn/personal-website/blob/main";
 
