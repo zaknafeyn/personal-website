@@ -1,14 +1,5 @@
-import { FC, useEffect } from "react";
-import type { CommandProps } from "../types";
+import type { CommandEffect } from "../types";
 
-export const ClearCommand: FC<CommandProps> = ({ clearOutput }) => {
-  
-  useEffect(() => {
-    clearOutput?.();
-   }, [
-    clearOutput
-  ])
-  
-
-  return null;
+export const runClearCommandEffect: CommandEffect = ({ clearOutput }) => {
+  clearOutput?.();
 };

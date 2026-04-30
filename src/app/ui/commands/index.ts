@@ -7,8 +7,8 @@ import { RepoCommand } from "./repoCommand";
 import { SkillsCommand } from "./skillsCommand";
 import { WebsiteCommand } from "./websiteCommand";
 import { StatsCommand } from "./statsCommand";
-import { CvCommand } from "./cvCommand";
-import { ClearCommand } from "./clearCommand";
+import { runCvCommandEffect } from "./cvCommand";
+import { runClearCommandEffect } from "./clearCommand";
 import { AllCommand } from "./allCommand";
 import { GameCommand } from "./gameCommand";
 import { ManCommand } from "./manCommand";
@@ -26,8 +26,8 @@ export {
   SkillsCommand,
   WebsiteCommand,
   StatsCommand,
-  CvCommand,
-  ClearCommand,
+  runCvCommandEffect,
+  runClearCommandEffect,
   AllCommand,
   GameCommand,
   ManCommand,

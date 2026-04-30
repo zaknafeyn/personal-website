@@ -6,6 +6,9 @@ export {
 } from "./registry";
 export type {
   Command,
+  CommandEffect,
+  CommandEffectContext,
+  CommandEffectResult,
   CommandProps,
   EchoCommand,
   UtilityCommand,

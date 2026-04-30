@@ -2,9 +2,9 @@ import type { ComponentType } from "react";
 import { AboutCommand, getTextOutput as getAboutTextOutput } from "./aboutCommand";
 import { AllCommand, getTextOutput as getAllTextOutput } from "./allCommand";
 import { AwardsCommand } from "./awardsCommand";
-import { ClearCommand } from "./clearCommand";
+import { runClearCommandEffect } from "./clearCommand";
 import { ContactsCommand, getTextOutput as getContactsTextOutput } from "./contactsCommand";
-import { CvCommand } from "./cvCommand";
+import { runCvCommandEffect } from "./cvCommand";
 import { GameCommand } from "./gameCommand";
 import { HelpCommand, getTextOutput as getHelpTextOutput } from "./helpCommand";
 import { ManCommand } from "./manCommand";
@@ -21,6 +21,8 @@ import type { ParsedArg, ParsedRedirect } from "./parseCommand";
 export type CommandCompletionMode = "rendered" | "resolved" | "manual";
 export type CommandKind = "echo" | "utility";
 export type CommandTextOutputLoader = () => string | Promise<string>;
+export type CommandEffectResult = string | void;
+export type CommandEffect = (ctx: CommandEffectContext) => CommandEffectResult | Promise<CommandEffectResult>;
 
 export interface CommandProps {
   onComplete?: () => void;
@@ -29,6 +31,8 @@ export interface CommandProps {
   redirect?: ParsedRedirect;
   clearOutput?: () => void;
 }
+
+export type CommandEffectContext = Omit<CommandProps, "onComplete">;
 
 export type ManualEntry = {
   name: string;
@@ -40,19 +44,32 @@ export type ManualEntry = {
   notes?: readonly string[];
 };
 
-type CommandRegistryEntry = {
+type BaseCommandRegistryEntry = {
   name: string;
   aliases: readonly string[];
-  component: ComponentType<CommandProps>;
-  getTextOutput?: CommandTextOutputLoader;
   description: string;
   manual: ManualEntry;
   includeInAll: boolean;
-  completionMode: CommandCompletionMode;
   enabled: boolean;
   kind: CommandKind;
   suggested?: boolean;
 };
+
+type RenderedCommandRegistryEntry = BaseCommandRegistryEntry & {
+  component: ComponentType<CommandProps>;
+  effect?: never;
+  getTextOutput?: CommandTextOutputLoader;
+  completionMode: CommandCompletionMode;
+};
+
+type EffectCommandRegistryEntry = BaseCommandRegistryEntry & {
+  component?: never;
+  effect: CommandEffect;
+  getTextOutput?: never;
+  completionMode?: never;
+};
+
+type CommandRegistryEntry = RenderedCommandRegistryEntry | EffectCommandRegistryEntry;
 
 const fileRedirectManual =
   "> file.txt    Downloads the plain-text command output to the named file instead of printing it in the terminal.";
@@ -303,7 +320,7 @@ export const commandRegistry = [
   {
     name: "cv",
     aliases: [],
-    component: CvCommand,
+    effect: runCvCommandEffect,
     description: "Check out my CV [pdf - 132KB]",
     manual: {
       name: "cv",
@@ -312,7 +329,6 @@ export const commandRegistry = [
       options: ["--show    Opens the CV in a new browser tab instead of downloading it."],
     },
     includeInAll: false,
-    completionMode: "rendered",
     enabled: true,
     kind: "utility",
     suggested: true,
@@ -338,7 +354,7 @@ export const commandRegistry = [
   {
     name: "clear",
     aliases: [],
-    component: ClearCommand,
+    effect: runClearCommandEffect,
     description: "Clears the terminal of all output",
     manual: {
       name: "clear",
@@ -346,7 +362,6 @@ export const commandRegistry = [
       description: "Clears the terminal output.",
     },
     includeInAll: false,
-    completionMode: "rendered",
     enabled: true,
     kind: "utility",
   },
@@ -394,8 +409,10 @@ export const utilityCommands = utilityCommandEntries.map((entry) => entry.name) 
 export const allOutputCommands = allOutputCommandEntries.map((entry) => entry.name) as EchoCommand[];
 
 export const COMMANDS_MAPPING = Object.fromEntries(
-  enabledCommandEntries.map((entry) => [entry.name, entry.component])
-) as Record<Command, ComponentType<CommandProps>>;
+  enabledCommandEntries.flatMap((entry) =>
+    "component" in entry ? [[entry.name, entry.component]] : []
+  )
+) as Partial<Record<Command, ComponentType<CommandProps>>>;
 
 export function getCommandEntry(command: string): RegisteredCommand | undefined {
   return commandRegistry.find((entry) => entry.name === command);
@@ -406,11 +423,25 @@ export function getEnabledCommandEntry(command: Command) {
 }
 
 export function getCommandComponent(command: Command): ComponentType<CommandProps> {
-  return COMMANDS_MAPPING[command];
+  const component = COMMANDS_MAPPING[command];
+
+  if (!component) {
+    throw new Error(`Command '${command}' is not a rendered command.`);
+  }
+
+  return component;
 }
 
 export function getCommandCompletionMode(command: Command): CommandCompletionMode {
-  return getEnabledCommandEntry(command)?.completionMode ?? "rendered";
+  const entry = getEnabledCommandEntry(command);
+
+  return entry && "component" in entry ? entry.completionMode : "rendered";
+}
+
+export function getCommandEffect(command: Command): CommandEffect | undefined {
+  const entry = getEnabledCommandEntry(command);
+
+  return entry && "effect" in entry ? entry.effect : undefined;
 }
 
 export function resolveCommandName(commandOrAlias: string): Command | undefined {

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentType, FC, JSX, ReactElement, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import React, { ComponentType, FC, JSX, ReactElement, Suspense, useCallback, useEffect, useState } from "react";
 import ErrorMessage from "../errorMessage";
 import InputArea from "../inputArea";
 import TerminalOutput from "../terminalOutput";
@@ -11,10 +11,11 @@ import {
   allCommands,
   getCommandCompletionMode,
   getCommandComponent,
+  getCommandEffect,
   resolveCommandName,
   suggestedCommandEntries,
 } from "../../commands/registry";
-import type { Command, CommandProps } from "../../commands/types";
+import type { Command, CommandEffect, CommandEffectResult, CommandProps } from "../../commands/types";
 import styles from './terminal.module.css';
 import { getClosestCommand } from "./utils";
 import { parseCommand } from "app/ui/commands/parseCommand";
@@ -56,74 +57,47 @@ function getSafeTextFilename(filename: string | undefined, command: Command): st
     : `${safeName}.txt`;
 }
 
-const RedirectedCommandOutput: FC<{
-  command: Command;
-  onComplete: () => void;
-  redirect: ParsedRedirect;
-}> = ({ command, onComplete, redirect }) => {
-  const [message, setMessage] = useState(`Saving ${command} output...`);
-  const downloadedRef = useRef(false);
-  const textOutputPromiseRef = useRef<Promise<string> | null>(null);
+async function runRedirectCommandEffect(
+  command: Command,
+  redirect: ParsedRedirect,
+): Promise<string> {
+  const downloadName = getSafeTextFilename(redirect.target, command);
+  let objectUrl: string | undefined;
 
-  useEffect(() => {
-    let isMounted = true;
-    let url: string | undefined;
+  try {
+    if (!canRedirectCommand(command)) {
+      return `Command '${command}' does not support file redirection.`;
+    }
 
-    const writeRedirect = async () => {
-      const downloadName = getSafeTextFilename(redirect.target, command);
+    const textOutput = await getCommandTextOutput(command);
+    const blob = new Blob([textOutput], {
+      type: "text/plain;charset=utf-8",
+    });
 
-      try {
-        if (!canRedirectCommand(command)) {
-          setMessage(`Command '${command}' does not support file redirection.`);
-          return;
-        }
+    objectUrl = URL.createObjectURL(blob);
+    downloadFile(objectUrl, downloadName);
 
-        textOutputPromiseRef.current ??= getCommandTextOutput(command);
-        const textOutput = await textOutputPromiseRef.current;
-        const blob = new Blob([textOutput], {
-          type: "text/plain;charset=utf-8",
-        });
+    return `Saved ${command} output to ${downloadName}.`;
+  } catch (error) {
+    console.error(`Failed to redirect command '${command}'`, error);
 
-        if (!downloadedRef.current) {
-          downloadedRef.current = true;
-          url = URL.createObjectURL(blob);
-          downloadFile(url, downloadName);
-        }
+    return `Command '${command}' failed to save output.`;
+  } finally {
+    if (objectUrl) {
+      const url = objectUrl;
+      window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
+  }
+}
 
-        if (isMounted) {
-          setMessage(`Saved ${command} output to ${downloadName}.`);
-        }
-      } catch (error) {
-        console.error(`Failed to redirect command '${command}'`, error);
-
-        if (isMounted) {
-          setMessage(`Command '${command}' failed to save output.`);
-        }
-      } finally {
-        if (url) {
-          const objectUrl = url;
-          window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
-        }
-
-        if (isMounted) {
-          onComplete();
-        }
-      }
-    };
-
-    writeRedirect();
-
-    return () => {
-      isMounted = false;
-
-      if (url) {
-        URL.revokeObjectURL(url);
-      }
-    };
-  }, [command, onComplete, redirect.target]);
-
-  return <Text.Paragraph>{message}</Text.Paragraph>;
-};
+function isPromise<T>(value: T | Promise<T>): value is Promise<T> {
+  return Boolean(
+    value &&
+    typeof value === "object" &&
+    "then" in value &&
+    typeof value.then === "function"
+  );
+}
 
 const CommandRuntimeError: FC<{ command: string; error?: Error }> = ({ command, error }) => (
   <div>
@@ -256,6 +230,59 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     );
   }, [finishCommand]);
 
+  const runCommandEffect = useCallback((
+    command: Command,
+    effect: CommandEffect,
+    props: CommandProps,
+    commandRecord: JSX.Element,
+  ) => {
+    const appendLine = (line: CommandEffectResult) => {
+      if (line) {
+        setOutput((prev) => [
+          ...prev,
+          <Text.Paragraph key={`effect-line-${prev.length}`}>{line}</Text.Paragraph>,
+        ]);
+      }
+
+      finishCommand();
+    };
+
+    setOutput((prev) => [...prev, commandRecord]);
+
+    try {
+      const result = effect(props);
+
+      if (isPromise(result)) {
+        result.then(appendLine).catch((error) => {
+          console.error(`Command '${command}' failed`, error);
+          setOutput((prev) => [
+            ...prev,
+            <CommandRuntimeError
+              command={command}
+              error={error instanceof Error ? error : undefined}
+              key={`effect-error-${prev.length}`}
+            />,
+          ]);
+          finishCommand();
+        });
+        return;
+      }
+
+      appendLine(result);
+    } catch (error) {
+      console.error(`Command '${command}' failed`, error);
+      setOutput((prev) => [
+        ...prev,
+        <CommandRuntimeError
+          command={command}
+          error={error instanceof Error ? error : undefined}
+          key={`effect-error-${prev.length}`}
+        />,
+      ]);
+      finishCommand();
+    }
+  }, [finishCommand]);
+
 
   const processCommand = (input: string) => {
     const trimmedInput = input.trim();
@@ -323,7 +350,6 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     }
 
     const command = resolvedCommand;
-    const Component = getCommandComponent(command);
     const { args } = inputCommand;
     const props = {
       args,
@@ -336,19 +362,32 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       setShowCommandSuggestions(true);
     }
 
+    const redirect = inputCommand.redirect;
+
+    if (redirect) {
+      runCommandEffect(
+        command,
+        () => runRedirectCommandEffect(command, redirect),
+        props,
+        commandRecord,
+      );
+      return;
+    }
+
+    const effect = getCommandEffect(command);
+
+    if (effect) {
+      runCommandEffect(command, effect, props, commandRecord);
+      return;
+    }
+
+    const Component = getCommandComponent(command);
+
     setOutput((prev) => [
       ...prev,
       commandRecord,
       <React.Fragment key={prev.length}>
-        {inputCommand.redirect ? (
-          <RedirectedCommandOutput
-            command={command}
-            onComplete={finishCommand}
-            redirect={inputCommand.redirect}
-          />
-        ) : (
-          renderCommandOutput(command, Component, props)
-        )}
+        {renderCommandOutput(command, Component, props)}
       </React.Fragment>,
     ]);
   };
