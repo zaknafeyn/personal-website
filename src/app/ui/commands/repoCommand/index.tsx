@@ -2,7 +2,10 @@ import { FC } from "react"
 
 import { Link } from "app/ui/components/link"
 import { Text } from "app/ui/components/text"
+import { commandContentToPlainText, getRepoContent } from "../content"
 import type { CommandProps } from "../types"
+
+export const getTextOutput = () => commandContentToPlainText(getRepoContent());
 
 export const RepoCommand: FC<CommandProps> = () => {
   return (

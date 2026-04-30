@@ -1,30 +1,32 @@
 import type { ComponentType } from "react";
-import { AboutCommand } from "./aboutCommand";
-import { AllCommand } from "./allCommand";
+import { AboutCommand, getTextOutput as getAboutTextOutput } from "./aboutCommand";
+import { AllCommand, getTextOutput as getAllTextOutput } from "./allCommand";
 import { AwardsCommand } from "./awardsCommand";
 import { ClearCommand } from "./clearCommand";
-import { ContactsCommand } from "./contactsCommand";
+import { ContactsCommand, getTextOutput as getContactsTextOutput } from "./contactsCommand";
 import { CvCommand } from "./cvCommand";
 import { GameCommand } from "./gameCommand";
-import { HelpCommand } from "./helpCommand";
+import { HelpCommand, getTextOutput as getHelpTextOutput } from "./helpCommand";
 import { ManCommand } from "./manCommand";
-import { NowCommand } from "./nowCommand";
-import { ProjectsCommand } from "./projectsCommand";
-import { RepoCommand } from "./repoCommand";
-import { SkillsCommand } from "./skillsCommand";
-import { StackCommand } from "./stackCommand";
-import { StatsCommand } from "./statsCommand";
-import { VersionCommand } from "./versionCommand";
-import { WebsiteCommand } from "./websiteCommand";
-import type { ParsedArg } from "./parseCommand";
+import { NowCommand, getTextOutput as getNowTextOutput } from "./nowCommand";
+import { ProjectsCommand, getTextOutput as getProjectsTextOutput } from "./projectsCommand";
+import { RepoCommand, getTextOutput as getRepoTextOutput } from "./repoCommand";
+import { SkillsCommand, getTextOutput as getSkillsTextOutput } from "./skillsCommand";
+import { StackCommand, getTextOutput as getStackTextOutput } from "./stackCommand";
+import { StatsCommand, getTextOutput as getStatsTextOutput } from "./statsCommand";
+import { VersionCommand, getTextOutput as getVersionTextOutput } from "./versionCommand";
+import { WebsiteCommand, getTextOutput as getWebsiteTextOutput } from "./websiteCommand";
+import type { ParsedArg, ParsedRedirect } from "./parseCommand";
 
 export type CommandCompletionMode = "rendered" | "resolved" | "manual";
 export type CommandKind = "echo" | "utility";
+export type CommandTextOutputLoader = () => string | Promise<string>;
 
 export interface CommandProps {
   onComplete?: () => void;
   args?: ParsedArg[];
   params?: string[];
+  redirect?: ParsedRedirect;
   clearOutput?: () => void;
 }
 
@@ -42,6 +44,7 @@ type CommandRegistryEntry = {
   name: string;
   aliases: readonly string[];
   component: ComponentType<CommandProps>;
+  getTextOutput?: CommandTextOutputLoader;
   description: string;
   manual: ManualEntry;
   includeInAll: boolean;
@@ -51,20 +54,25 @@ type CommandRegistryEntry = {
   suggested?: boolean;
 };
 
+const fileRedirectManual =
+  "> file.txt    Downloads the plain-text command output to the named file instead of printing it in the terminal.";
+
 export const commandRegistry = [
   {
     name: "help",
     aliases: [],
     component: HelpCommand,
+    getTextOutput: getHelpTextOutput,
     description: "Lists the available terminal commands with a short description for each one.",
     manual: {
       name: "help",
-      synopsis: "help [--links | -l]",
+      synopsis: "help [--links | -l] [> file.txt]",
       description: "Lists the available terminal commands with a short description for each one.",
       options: [
         "--links    Shows clickable command chips before the next prompt.",
         "-l         Shorthand for --links.",
       ],
+      redirects: [fileRedirectManual],
     },
     includeInAll: false,
     completionMode: "rendered",
@@ -75,11 +83,13 @@ export const commandRegistry = [
     name: "about",
     aliases: [],
     component: AboutCommand,
+    getTextOutput: getAboutTextOutput,
     description: "Good way to know something about me",
     manual: {
       name: "about",
-      synopsis: "about",
+      synopsis: "about [> file.txt]",
       description: "Prints a longer personal introduction, background, interests, and CV/contact hints.",
+      redirects: [fileRedirectManual],
     },
     includeInAll: true,
     completionMode: "rendered",
@@ -91,15 +101,14 @@ export const commandRegistry = [
     name: "projects",
     aliases: [],
     component: ProjectsCommand,
+    getTextOutput: getProjectsTextOutput,
     description: "Engineering case studies, tradeoffs, results, and links",
     manual: {
       name: "projects",
       synopsis: "projects [> file.txt]",
       description:
         "Shows concise engineering case studies with problems, roles, constraints, stacks, architecture decisions, tradeoffs, and measurable results.",
-      redirects: [
-        "> file.txt    Downloads the plain-text projects output to the named file instead of printing the case studies in the terminal.",
-      ],
+      redirects: [fileRedirectManual],
     },
     includeInAll: false,
     completionMode: "rendered",
@@ -111,11 +120,13 @@ export const commandRegistry = [
     name: "contacts",
     aliases: [],
     component: ContactsCommand,
+    getTextOutput: getContactsTextOutput,
     description: "Let's keep in touch",
     manual: {
       name: "contacts",
-      synopsis: "contacts",
+      synopsis: "contacts [> file.txt]",
       description: "Shows email and social links.",
+      redirects: [fileRedirectManual],
     },
     includeInAll: true,
     completionMode: "rendered",
@@ -143,11 +154,13 @@ export const commandRegistry = [
     name: "repo",
     aliases: [],
     component: RepoCommand,
+    getTextOutput: getRepoTextOutput,
     description: "Take a look at some of my work",
     manual: {
       name: "repo",
-      synopsis: "repo",
+      synopsis: "repo [> file.txt]",
       description: "Shows links to public repositories, open-source work, and related code artifacts.",
+      redirects: [fileRedirectManual],
     },
     includeInAll: true,
     completionMode: "rendered",
@@ -159,11 +172,13 @@ export const commandRegistry = [
     name: "skills",
     aliases: [],
     component: SkillsCommand,
+    getTextOutput: getSkillsTextOutput,
     description: "I'm pretty good at some things",
     manual: {
       name: "skills",
-      synopsis: "skills",
+      synopsis: "skills [> file.txt]",
       description: "Fetches and prints grouped technical skills with level indicators.",
+      redirects: [fileRedirectManual],
     },
     includeInAll: true,
     completionMode: "resolved",
@@ -175,11 +190,13 @@ export const commandRegistry = [
     name: "website",
     aliases: [],
     component: WebsiteCommand,
+    getTextOutput: getWebsiteTextOutput,
     description: "How I built this",
     manual: {
       name: "website",
-      synopsis: "website",
+      synopsis: "website [> file.txt]",
       description: "Explains how and why this terminal-style website was built.",
+      redirects: [fileRedirectManual],
     },
     includeInAll: false,
     completionMode: "rendered",
@@ -191,12 +208,14 @@ export const commandRegistry = [
     name: "stack",
     aliases: [],
     component: StackCommand,
+    getTextOutput: getStackTextOutput,
     description: "Architecture, stack, tradeoffs, deployment, and source links",
     manual: {
       name: "stack",
-      synopsis: "stack",
+      synopsis: "stack [> file.txt]",
       description:
         "Explains this website's App Router architecture, React Query data layer, command registry, API routes, deployment model, source links, and tradeoffs.",
+      redirects: [fileRedirectManual],
       notes: [
         "This command focuses on the website architecture; the skills command shows a broader skill matrix.",
       ],
@@ -211,11 +230,13 @@ export const commandRegistry = [
     name: "now",
     aliases: [],
     component: NowCommand,
+    getTextOutput: getNowTextOutput,
     description: "Current focus, learning goals, recent work, and availability",
     manual: {
       name: "now",
-      synopsis: "now",
+      synopsis: "now [> file.txt]",
       description: "Shows current focus areas, learning goals, recent shipped work, and availability.",
+      redirects: [fileRedirectManual],
       notes: [
         "Use this for the freshest snapshot of what Valentyn is exploring and building toward.",
       ],
@@ -230,11 +251,13 @@ export const commandRegistry = [
     name: "stats",
     aliases: [],
     component: StatsCommand,
+    getTextOutput: getStatsTextOutput,
     description: "See my stats on coding platforms",
     manual: {
       name: "stats",
-      synopsis: "stats",
+      synopsis: "stats [> file.txt]",
       description: "Fetches and prints coding-platform practice stats.",
+      redirects: [fileRedirectManual],
     },
     includeInAll: true,
     completionMode: "resolved",
@@ -263,11 +286,13 @@ export const commandRegistry = [
     name: "version",
     aliases: [],
     component: VersionCommand,
+    getTextOutput: getVersionTextOutput,
     description: "Shows the current package, commit, and deployment version",
     manual: {
       name: "version",
-      synopsis: "version",
+      synopsis: "version [> file.txt]",
       description: "Prints the current package version, git commit hash, and deployment id.",
+      redirects: [fileRedirectManual],
       notes: ["Output format: package+commit+deployment."],
     },
     includeInAll: false,
@@ -296,11 +321,13 @@ export const commandRegistry = [
     name: "all",
     aliases: [],
     component: AllCommand,
+    getTextOutput: getAllTextOutput,
     description: "Tell me everything",
     manual: {
       name: "all",
-      synopsis: "all",
+      synopsis: "all [> file.txt]",
       description: "Prints the output of every regular information command.",
+      redirects: [fileRedirectManual],
       notes: ["Utility commands, including man, are not included in all output."],
     },
     includeInAll: false,

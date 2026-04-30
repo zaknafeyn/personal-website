@@ -3,7 +3,10 @@ import { FC } from "react";
 import { getAge } from "app/ui/utils/getAge";
 import { Text } from "../../components/text";
 import { Link } from "app/ui/components/link";
+import { commandContentToPlainText, getAboutContent } from "../content";
 import type { CommandProps } from "../types";
+
+export const getTextOutput = () => commandContentToPlainText(getAboutContent());
 
 export const AboutCommand: FC<CommandProps> = () => {
   return (

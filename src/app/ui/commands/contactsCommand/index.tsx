@@ -2,7 +2,10 @@ import { FC } from "react";
 
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { Link } from "app/ui/components/link";
+import { commandContentToPlainText, getContactsContent } from "../content";
 import type { CommandProps } from "../types";
+
+export const getTextOutput = () => commandContentToPlainText(getContactsContent());
 
 export const ContactsCommand: FC<CommandProps> = () => {
   return (

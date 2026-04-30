@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentType, FC, JSX, ReactElement, Suspense, useCallback, useEffect, useState } from "react";
+import React, { ComponentType, FC, JSX, ReactElement, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import ErrorMessage from "../errorMessage";
 import InputArea from "../inputArea";
 import TerminalOutput from "../terminalOutput";
@@ -18,6 +18,9 @@ import type { Command, CommandProps } from "../../commands/types";
 import styles from './terminal.module.css';
 import { getClosestCommand } from "./utils";
 import { parseCommand } from "app/ui/commands/parseCommand";
+import type { ParsedRedirect } from "app/ui/commands/parseCommand";
+import { canRedirectCommand, getCommandTextOutput } from "app/ui/commands/textOutput";
+import { downloadFile } from "app/ui/utils/downloadFile";
 import { Text } from "../text";
 
 type TerminalProps = {
@@ -40,6 +43,86 @@ const CommandCompletionMarker: FC<{ onComplete: () => void }> = ({ onComplete })
   }, [onComplete]);
 
   return null;
+};
+
+function getSafeTextFilename(filename: string | undefined, command: Command): string {
+  const fallback = `${command}.txt`;
+  const safeName = filename?.replace(/[\\/:*?"<>|]/g, "-").trim();
+
+  if (!safeName) return fallback;
+
+  return safeName.toLowerCase().endsWith(".txt")
+    ? safeName
+    : `${safeName}.txt`;
+}
+
+const RedirectedCommandOutput: FC<{
+  command: Command;
+  onComplete: () => void;
+  redirect: ParsedRedirect;
+}> = ({ command, onComplete, redirect }) => {
+  const [message, setMessage] = useState(`Saving ${command} output...`);
+  const downloadedRef = useRef(false);
+  const textOutputPromiseRef = useRef<Promise<string> | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    let url: string | undefined;
+
+    const writeRedirect = async () => {
+      const downloadName = getSafeTextFilename(redirect.target, command);
+
+      try {
+        if (!canRedirectCommand(command)) {
+          setMessage(`Command '${command}' does not support file redirection.`);
+          return;
+        }
+
+        textOutputPromiseRef.current ??= getCommandTextOutput(command);
+        const textOutput = await textOutputPromiseRef.current;
+        const blob = new Blob([textOutput], {
+          type: "text/plain;charset=utf-8",
+        });
+
+        if (!downloadedRef.current) {
+          downloadedRef.current = true;
+          url = URL.createObjectURL(blob);
+          downloadFile(url, downloadName);
+        }
+
+        if (isMounted) {
+          setMessage(`Saved ${command} output to ${downloadName}.`);
+        }
+      } catch (error) {
+        console.error(`Failed to redirect command '${command}'`, error);
+
+        if (isMounted) {
+          setMessage(`Command '${command}' failed to save output.`);
+        }
+      } finally {
+        if (url) {
+          const objectUrl = url;
+          window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+        }
+
+        if (isMounted) {
+          onComplete();
+        }
+      }
+    };
+
+    writeRedirect();
+
+    return () => {
+      isMounted = false;
+
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
+    };
+  }, [command, onComplete, redirect.target]);
+
+  return <Text.Paragraph>{message}</Text.Paragraph>;
 };
 
 const CommandRuntimeError: FC<{ command: string; error?: Error }> = ({ command, error }) => (
@@ -206,7 +289,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     // Now process command, ignoring case
     let inputCommand: ReturnType<typeof parseCommand>;
     try {
-      inputCommand = parseCommand(input.toLowerCase());
+      inputCommand = parseCommand(trimmedInput);
     } catch (error) {
       console.error("Failed to parse command", error);
       setOutput((prev) => [
@@ -245,6 +328,7 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
     const props = {
       args,
       params: inputCommand.params,
+      redirect: inputCommand.redirect,
       clearOutput,
     };
 
@@ -256,7 +340,15 @@ const Terminal: FC<TerminalProps> = ({ terminalPrompt = ">", banner, welcomeMess
       ...prev,
       commandRecord,
       <React.Fragment key={prev.length}>
-        {renderCommandOutput(command, Component, props)}
+        {inputCommand.redirect ? (
+          <RedirectedCommandOutput
+            command={command}
+            onComplete={finishCommand}
+            redirect={inputCommand.redirect}
+          />
+        ) : (
+          renderCommandOutput(command, Component, props)
+        )}
       </React.Fragment>,
     ]);
   };

@@ -4,6 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { ISubmissionResults } from "app/api/stats/types";
 import { Text } from "app/ui/components/text";
 import { DescriptionList, DescriptionItem } from "app/ui/components/descriptionList";
+import { commandContentToPlainText, getStatsContent } from "../content";
 
 interface StatsData {
   gfeStats: ISubmissionResults[],
@@ -14,6 +15,18 @@ const KEY_TITLE_MAPPING: Record<string, string> = {
   gfeStats: "Great Frontend Stats",
   leetcodeStats: "Leetcode Stats"
 }
+
+export const getTextOutput = async () => {
+  const response = await fetch("/api/stats");
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch stats");
+  }
+
+  const stats = await response.json() as StatsData;
+
+  return commandContentToPlainText(getStatsContent(stats));
+};
 
 export const StatsCommand: FC<CommandProps> = () => {
 

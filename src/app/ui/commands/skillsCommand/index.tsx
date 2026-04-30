@@ -5,7 +5,27 @@ import { ISkill, SKILL_GROUP_NAME, TSkillGroup } from "app/api/skills/types";
 
 import styles from './skillsCommand.module.css';
 import { DescriptionList } from "app/ui/components/descriptionList";
+import { descriptionItemsToPlainText, getSkillGroupsContent } from "../content";
 import type { CommandProps } from "../types";
+
+export const getTextOutput = async () => {
+  const response = await fetch("/api/skills");
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch skills");
+  }
+
+  const { skills } = await response.json() as { skills: ISkill[] };
+
+  return getSkillGroupsContent(skills)
+    .map((group) =>
+      [
+        group.title,
+        descriptionItemsToPlainText(group.descriptionItems),
+      ].join("\n")
+    )
+    .join("\n\n");
+};
 
 export const SkillsCommand: FC<CommandProps> = () => {
   // Using suspense-enabled data fetching

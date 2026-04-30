@@ -1,8 +1,11 @@
 import { FC, useMemo } from "react";
 import { DescriptionList } from "app/ui/components/descriptionList";
 import { Text } from "app/ui/components/text";
+import { commandContentToPlainText, getHelpContent } from "../content";
 import { commandHelpEntries } from "../registry";
 import type { CommandProps } from "../types";
+
+export const getTextOutput = () => commandContentToPlainText(getHelpContent());
 
 export const HelpCommand: FC<CommandProps> = () => {
   const items = useMemo(

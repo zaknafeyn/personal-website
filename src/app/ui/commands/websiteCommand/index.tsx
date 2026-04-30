@@ -2,7 +2,10 @@ import { FC } from 'react';
 
 import { Link } from 'app/ui/components/link';
 import { Text } from '../../components/text';
+import { commandContentToPlainText, getWebsiteContent } from '../content';
 import type { CommandProps } from '../types';
+
+export const getTextOutput = () => commandContentToPlainText(getWebsiteContent());
 
 export const WebsiteCommand: FC<CommandProps> = () => {
   return (
