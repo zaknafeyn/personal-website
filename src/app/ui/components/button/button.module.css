@@ -1,7 +1,7 @@
 .button {
-  background-color: var(--color-button-background);
-  color: var(--color-terminal-text-primary);
-  font-family: var(--ubuntu);
+  background-color: var(--accent);
+  color: var(--fg);
+  font-family: var(--term-font);
   border-radius: 5px;
   border: none;
   min-width: 120px;
@@ -14,11 +14,11 @@
   &:hover&:not(:disabled) {
     cursor: pointer;
     box-shadow:
-      0 14px 16px 0 var(--color-button-background-shadow),
-      0 10px 30px 0 var(--color-button-background-shadow);
+      0 14px 16px 0 var(--btn-shadow),
+      0 10px 30px 0 var(--btn-shadow);
   }
 
   &:disabled {
-    background-color: var(--color-disabled);
+    background-color: var(--disabled);
   }
 }

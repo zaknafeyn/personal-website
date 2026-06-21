@@ -2,8 +2,8 @@
   white-space: pre-wrap;
   /* font-family: monospace; */
   display: block;
-  color: var(--color-header-text);
-  text-shadow: 0 0 5px var(--color-header-text);
+  color: var(--accent);
+  text-shadow: 0 0 5px var(--accent);
   margin-bottom: 20px;
 }
 
@@ -18,19 +18,19 @@
   font-size: 14px;
   line-height: 16px;
   font-weight: 700;
-  font-family: var(--font-ubuntu);
+  font-family: var(--term-font);
 }
 
 .textTerminal {
   font-size: 16px;
   line-height: 18px;
   white-space: pre-wrap;
-  color: var(--color-terminal-text-primary);
+  color: var(--fg);
 }
 
 .terminalGlow {
-  color: var(--color-terminal-glow);
-  text-shadow: 0 0 4px var(--color-terminal-glow);
+  color: var(--fg);
+  text-shadow: 0 0 4px var(--fg);
 }
 
 @media only screen and (max-width: 900px) {

@@ -3,8 +3,8 @@
   font-size: 15px;
   line-height: 20px;
   white-space: pre-wrap;
-  color: var(--color-terminal-text-primary);
-  font-family: var(--font-ubuntu);
+  color: var(--fg);
+  font-family: var(--term-font);
   display: flex;
   flex-direction: column;
 }
@@ -23,12 +23,12 @@
 }
 
 .terminalGlow {
-  color: var(--color-terminal-glow);
-  text-shadow: 0 0 4px var(--color-terminal-glow);
+  color: var(--fg);
+  text-shadow: 0 0 4px var(--fg);
 }
 
 .terminalInput {
-  color: var(--color-input-prompt);
+  color: var(--prompt);
 }
 
 .commandSuggestions {
@@ -43,13 +43,13 @@
   appearance: none;
   background: color-mix(
     in srgb,
-    var(--color-terminal-glow) 12%,
+    var(--fg) 12%,
     transparent
   );
   border: 1px solid
-    color-mix(in srgb, var(--color-terminal-glow) 60%, transparent);
+    color-mix(in srgb, var(--fg) 60%, transparent);
   border-radius: 4px;
-  color: var(--color-terminal-glow);
+  color: var(--fg);
   cursor: pointer;
   font-family: inherit;
   font-size: 0.95em;
@@ -62,11 +62,11 @@
 .commandSuggestion:focus-visible {
   background: color-mix(
     in srgb,
-    var(--color-terminal-glow) 20%,
+    var(--fg) 20%,
     transparent
   );
   box-shadow: 0 0 8px
-    color-mix(in srgb, var(--color-terminal-glow) 45%, transparent);
+    color-mix(in srgb, var(--fg) 45%, transparent);
   outline: none;
 }
 

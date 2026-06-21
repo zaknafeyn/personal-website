@@ -1,7 +1,7 @@
 .descriptionList {
   & dt {
-    color: var(--color-terminal-glow);
-    text-shadow: 0 0 4px var(--color-terminal-glow);
+    color: var(--fg);
+    text-shadow: 0 0 4px var(--fg);
   }
 
   & dd {

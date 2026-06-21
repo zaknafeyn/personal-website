@@ -1,9 +1,9 @@
 .link {
-  color: var(--color-link);
+  color: var(--link);
 
   &:hover {
-    color: var(--color-link-hover-background);
-    background-color: var(--color-link-hover);
+    color: var(--bg);
+    background-color: var(--link);
     text-decoration: none;
   }
 }

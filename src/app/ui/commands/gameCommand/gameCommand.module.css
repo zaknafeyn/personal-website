@@ -3,8 +3,8 @@
   --area-width: 300px;
   --area-height: 300px;
   --area-gap: 5px;
-  --color-zero: var(--color-loading-text-6);
-  --color-cross: var(--color-loading-text-3);
+  --color-zero: var(--link);
+  --color-cross: var(--accent);
   margin-block: 1em 1em;
 }
 
@@ -33,7 +33,7 @@
 .field {
   width: calc((var(--area-width) - 3 * var(--area-gap)) / 3);
   height: calc((var(--area-height) - 3 * var(--area-gap)) / 3);
-  border: solid 1px var(--border-black);
+  border: solid 1px var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +47,7 @@
   }
 
   &.disabled {
-    background-color: var(--color-disabled);
+    background-color: var(--disabled);
     cursor: auto;
   }
 
