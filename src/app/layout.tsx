@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { Viewport } from 'next'
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 
 import { Providers } from './providers'
 import "./globals.css";
@@ -80,6 +81,7 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
+        <Analytics />
         <Script
           src="https://static.cloudflareinsights.com/beacon.min.js"
           data-cf-beacon='{"token":"ed619f1358b4464c9812d8d9658799aa"}'

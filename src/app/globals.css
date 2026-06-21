@@ -1,61 +1,127 @@
-:root {
-  overscroll-behavior: none;
+/* ============================================================
+   SEMANTIC COLOR TOKENS
+   Components read only these — never raw hex.
+   Swap [data-theme] on <html> to retheme the whole UI.
+   ============================================================ */
 
-  --color-terminal-background: #2e3436;
-  --color-terminal-foreground: #ffffff;
-  --color-header-text: #008080;
-
-  --color-link: #dea5f5;
-  --color-link-hover-background: #000000;
-  --color-link-hover: #c4a5f5;
-
-  --color-terminal-text-primary: #eeeeec;
-  --color-terminal-text-secondary: #aaaaaa;
-  --color-input-placeholder: #808080;
-  --color-input-prompt: #f0bf81;
-  --color-error-text: #ef2929;
-  --color-terminal-glow: #eeeeee;
-
-  --color-skill-gradient-1: #d11800;
-  --color-skill-gradient-2: #be3232;
-  --color-skill-gradient-3: #b24d17;
-  --color-skill-gradient-4: #e77d20;
-  --color-skill-gradient-5: #d1c000;
-  --color-skill-gradient-6: #96b60b;
-  --color-skill-gradient-7: #77c821;
-  --color-skill-gradient-8: #4acc31;
-  --color-skill-gradient-9: #18e842;
-  --color-skill-gradient-10: #03ff18;
-
-  --color-loading-text-1: #00ff00;
-  --color-loading-text-2: #00ffff;
-  --color-loading-text-3: #ffff00;
-  --color-loading-text-4: #808080;
-  --color-loading-text-5: #ffaa00;
-  --color-loading-text-6: #00aaff;
-  --color-loading-text-7: #888;
-
-  --color-button-background: var(--color-header-text);
-  --color-button-background-shadow: rgb(0, 128, 128, 0.14);
-
-  --color-disabled: #aaaaaa80;
-  --border-black: #000;
-
-  /* --color-username: #8ae234; */
-  /* --color-terminal-bg: #2e3436; */
-
-  /* --color-directory-name: #729fcf; */
-  /* --color-username: #8ae234; */
-  /* --color-prompt-path: #ad7fa8; */
+/* Ubuntu (default) */
+:root,
+[data-theme="ubuntu"] {
+  --bg:        #2e3436;
+  --titlebar:  #3a4144;
+  --panel:     #262b2d;
+  --fg:        #eeeeec;
+  --fg-dim:    #9aa3a2;
+  --accent:    #8ae234;
+  --prompt:    #f0bf81;
+  --link:      #dea5f5;
+  --border:    #4d5658;
+  --error:     #ef2929;
+  --glow:      none;
+  --tabstrip:  var(--panel);
+  --term-font: var(--font-ubuntu);
+  --term-size: 15px;
 }
 
-/* TODO: add dark/white theming
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-terminal-background: #ededed;
-    --color-terminal-foreground: #0a0a0a;
-  }
-} */
+[data-theme="dracula"] {
+  --bg:        #282a36;
+  --titlebar:  #343746;
+  --panel:     #21222c;
+  --fg:        #f8f8f2;
+  --fg-dim:    #8a8fa3;
+  --accent:    #50fa7b;
+  --prompt:    #ffb86c;
+  --link:      #8be9fd;
+  --border:    #44475a;
+  --error:     #ff5555;
+  --glow:      none;
+  --tabstrip:  var(--panel);
+}
+
+[data-theme="solarized"] {
+  --bg:        #fdf6e3;
+  --titlebar:  #eee8d5;
+  --panel:     #eee8d5;
+  --fg:        #586e75;
+  --fg-dim:    #93a1a1;
+  --accent:    #859900;
+  --prompt:    #268bd2;
+  --link:      #2aa198;
+  --border:    #d8d2bf;
+  --error:     #dc322f;
+  --glow:      none;
+  --tabstrip:  var(--panel);
+}
+
+[data-theme="matrix"] {
+  --bg:        #040804;
+  --titlebar:  #0a140a;
+  --panel:     #071007;
+  --fg:        #00ff66;
+  --fg-dim:    #0aa84a;
+  --accent:    #00ff66;
+  --prompt:    #00ff66;
+  --link:      #9bff5b;
+  --border:    #0f3d0f;
+  --error:     #ff3b3b;
+  --glow:      0 0 6px rgba(0, 255, 102, 0.55);
+  --tabstrip:  var(--panel);
+}
+
+[data-theme="nord"] {
+  --bg:        #2e3440;
+  --titlebar:  #3b4252;
+  --panel:     #3b4252;
+  --fg:        #d8dee9;
+  --fg-dim:    #7b8494;
+  --accent:    #a3be8c;
+  --prompt:    #88c0d0;
+  --link:      #81a1c1;
+  --border:    #434c5e;
+  --error:     #bf616a;
+  --glow:      none;
+  --tabstrip:  var(--panel);
+}
+
+/* ============================================================
+   SKILL RAMP  —  theme-independent, always reads low → high
+   ============================================================ */
+:root {
+  --skill-1:  #d11800;
+  --skill-2:  #be3232;
+  --skill-3:  #b24d17;
+  --skill-4:  #e77d20;
+  --skill-5:  #d1c000;
+  --skill-6:  #96b60b;
+  --skill-7:  #77c821;
+  --skill-8:  #4acc31;
+  --skill-9:  #18e842;
+  --skill-10: #03ff18;
+}
+
+/* ============================================================
+   COMPONENT HELPERS  —  derived from semantic tokens
+   ============================================================ */
+:root {
+  --btn-shadow: color-mix(in srgb, var(--accent) 14%, transparent);
+  --disabled:   color-mix(in srgb, var(--fg-dim) 50%, transparent);
+
+  /* loading animation palette — decorative, not semantic */
+  --loading-1: #00ff00;
+  --loading-2: #00ffff;
+  --loading-3: #ffff00;
+  --loading-4: #808080;
+  --loading-5: #ffaa00;
+  --loading-6: #00aaff;
+  --loading-7: #888888;
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+:root {
+  overscroll-behavior: none;
+}
 
 html,
 body {
@@ -65,8 +131,8 @@ body {
 }
 
 body {
-  color: var(--color-terminal-foreground);
-  background: var(--color-terminal-background);
+  color: var(--fg);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
